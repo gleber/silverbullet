@@ -313,3 +313,43 @@ test("DataStore MQ - Queue Pause Throttling", async () => {
     vi.useRealTimers();
   }
 });
+
+test("DataStore MQ - In-Memory Queue size retrieval", async () => {
+  const db = new MemoryKvPrimitives();
+  const ds = new DataStore(db);
+  const eventHook = new EventHook();
+  const mq = new DataStoreMQ(ds, eventHook);
+
+  try {
+    const queue = "test-in-memory-size";
+
+    // Initially getQueueSizeInMemory triggers ensureQueueInitialized
+    let size = mq.getQueueSizeInMemory(queue);
+    expect(size).toBe(0); // initially 0 because initialization is async
+
+    // Wait for queue initialization
+    await mq.isQueueEmpty(queue);
+
+    // Send messages
+    await mq.send(queue, "task1");
+    await mq.send(queue, "task2");
+
+    size = mq.getQueueSizeInMemory(queue);
+    expect(size).toBe(2);
+
+    // Poll one
+    const msgs = await mq.poll(queue, 1);
+    expect(msgs.length).toBe(1);
+
+    // Size should still be 2 (1 queued + 1 processing)
+    size = mq.getQueueSizeInMemory(queue);
+    expect(size).toBe(2);
+
+    // Ack one
+    await mq.ack(queue, msgs[0].id);
+    size = mq.getQueueSizeInMemory(queue);
+    expect(size).toBe(1);
+  } finally {
+    await db.close();
+  }
+});

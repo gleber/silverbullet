@@ -128,6 +128,14 @@ export class DataStoreMQ {
     return this.pausedQueues.has(queue);
   }
 
+  public getQueueSizeInMemory(queue: string): number {
+    if (!this.initializedQueues.has(queue)) {
+      void this.ensureQueueInitialized(queue);
+      return 0;
+    }
+    return (this.queuedCounts.get(queue) || 0) + (this.processingCounts.get(queue) || 0);
+  }
+
   private ensureQueueInitialized(queue: string): Promise<void> {
     let promise = this.initializingPromises.get(queue);
     if (!promise) {
