@@ -1,8 +1,8 @@
-import { describe, expect, test } from "vitest";
-import { SpaceSync, SyncSnapshot } from "./sync.ts";
 import { sleep } from "@silverbulletmd/silverbullet/lib/async";
+import { describe, expect, test } from "vitest";
 import { MemoryKvPrimitives } from "../data/memory_kv_primitives.ts";
 import { DataStoreSpacePrimitives } from "./datastore_space_primitives.ts";
+import { SpaceSync, SyncSnapshot } from "./sync.ts";
 
 const encode = (s: string) => new TextEncoder().encode(s);
 const decode = (b: Uint8Array) => new TextDecoder().decode(b);
@@ -885,5 +885,31 @@ describe("syncProgress event", () => {
       expect(event.totalFiles).toBe(3);
       expect(event.filesProcessed).toBeLessThanOrEqual(event.totalFiles);
     }
+  });
+});
+
+// =================================================================
+// Sync Concurrency Option
+// =================================================================
+
+describe("Sync Concurrency Option", () => {
+  test("uses specified concurrency or default", () => {
+    const primary = new DataStoreSpacePrimitives(new MemoryKvPrimitives());
+    const secondary = new DataStoreSpacePrimitives(new MemoryKvPrimitives());
+
+    // Test default option is undefined in options, falls back to default 10 internally
+    const syncDefault = new SpaceSync(primary, secondary, {
+      conflictResolver: SpaceSync.primaryConflictResolver,
+      isSyncCandidate: () => true,
+    });
+    expect(syncDefault.options.syncConcurrency).toBeUndefined();
+
+    // Test custom concurrency value is correctly preserved in options
+    const syncCustom = new SpaceSync(primary, secondary, {
+      conflictResolver: SpaceSync.primaryConflictResolver,
+      isSyncCandidate: () => true,
+      syncConcurrency: 5,
+    });
+    expect(syncCustom.options.syncConcurrency).toBe(5);
   });
 });

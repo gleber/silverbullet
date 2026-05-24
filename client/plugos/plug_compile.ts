@@ -1,4 +1,3 @@
-import * as path from "node:path";
 import {
   copyFile,
   mkdir,
@@ -8,9 +7,9 @@ import {
   writeFile,
 } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import * as YAML from "js-yaml";
-
+import * as path from "node:path";
 import * as esbuild from "esbuild";
+import * as YAML from "js-yaml";
 import * as sass from "sass";
 import { bundleAssets } from "../asset_bundle/builder.ts";
 import type { BuildStep, Manifest } from "./types.ts";

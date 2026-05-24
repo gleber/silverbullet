@@ -1,6 +1,6 @@
-import { parseExpressionString } from "../parse.ts";
 import type { LuaExpression } from "../ast.ts";
 import { evalExpression } from "../eval.ts";
+import { parseExpressionString } from "../parse.ts";
 import {
   jsToLuaValue,
   LuaBuiltinFunction,

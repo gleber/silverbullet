@@ -1,31 +1,31 @@
-import type { EditorState, Range } from "@codemirror/state";
 import { syntaxTree } from "@codemirror/language";
+import type { EditorState, Range } from "@codemirror/state";
 import { Decoration } from "@codemirror/view";
+import { parseToRef } from "@silverbulletmd/silverbullet/lib/ref";
+import {
+  isLocalURL,
+  resolveMarkdownLink,
+} from "@silverbulletmd/silverbullet/lib/resolve";
+import {
+  nameFromTransclusion,
+  parseTransclusion,
+} from "@silverbulletmd/silverbullet/lib/transclusion";
+import { renderToText } from "@silverbulletmd/silverbullet/lib/tree";
+import type { Client } from "../client.ts";
+import { parseMarkdown } from "../markdown_parser/parser.ts";
+import {
+  createMediaElement,
+  expandMarkdown,
+  readTransclusionContent,
+} from "../markdown_renderer/inline.ts";
+import { LoadingWidget } from "./loading_widget.ts";
+import { LuaWidget } from "./lua_widget.ts";
 import {
   decoratorStateField,
   invisibleDecoration,
   isCursorInRange,
   widgetRenderMode,
 } from "./util.ts";
-import type { Client } from "../client.ts";
-import { LuaWidget } from "./lua_widget.ts";
-import { LoadingWidget } from "./loading_widget.ts";
-import {
-  createMediaElement,
-  expandMarkdown,
-  readTransclusionContent,
-} from "../markdown_renderer/inline.ts";
-import {
-  isLocalURL,
-  resolveMarkdownLink,
-} from "@silverbulletmd/silverbullet/lib/resolve";
-import { parseMarkdown } from "../markdown_parser/parser.ts";
-import { renderToText } from "@silverbulletmd/silverbullet/lib/tree";
-import {
-  nameFromTransclusion,
-  parseTransclusion,
-} from "@silverbulletmd/silverbullet/lib/transclusion";
-import { parseToRef } from "@silverbulletmd/silverbullet/lib/ref";
 
 export function inlineContentPlugin(client: Client) {
   return decoratorStateField((state: EditorState) => {
@@ -80,7 +80,10 @@ export function inlineContentPlugin(client: Client) {
               openRef: parseToRef(transclusion.url),
               callback: async () => {
                 // Resolve local URLs (only for markdown links, wikilinks are absolute)
-                if (isLocalURL(transclusion.url) && transclusion.linktype !== "wikilink") {
+                if (
+                  isLocalURL(transclusion.url) &&
+                  transclusion.linktype !== "wikilink"
+                ) {
                   transclusion.url = resolveMarkdownLink(
                     client.currentName(),
                     decodeURI(transclusion.url),

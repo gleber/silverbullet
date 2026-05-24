@@ -1,15 +1,15 @@
-import { fsEndpoint } from "../spaces/constants.ts";
-import { decodePageURI } from "@silverbulletmd/silverbullet/lib/ref";
-import type { SpacePrimitives } from "../spaces/space_primitives.ts";
-import { fileMetaToHeaders, headersToFileMeta } from "../lib/util.ts";
 import {
   isNetworkError,
   notFoundError,
   offlineError,
   pingInterval,
 } from "@silverbulletmd/silverbullet/constants";
-import type { SyncEngine } from "./sync_engine.ts";
+import { decodePageURI } from "@silverbulletmd/silverbullet/lib/ref";
+import { fileMetaToHeaders, headersToFileMeta } from "../lib/util.ts";
 import { EventEmitter } from "../plugos/event.ts";
+import { fsEndpoint } from "../spaces/constants.ts";
+import type { SpacePrimitives } from "../spaces/space_primitives.ts";
+import type { SyncEngine } from "./sync_engine.ts";
 
 const alwaysProxy = [
   "/.auth",
@@ -171,6 +171,7 @@ export class ProxyRouter extends EventEmitter<ProxyRouterEvents> {
           const pathname = requestUrl.pathname.substring(
             this.basePathName.length,
           );
+          const path = decodePageURI(pathname.slice(fsEndpoint.length + 1));
 
           // Paths that can never be served locally (auth, shell, etc.) — always proxy.
           // If the proxy fails, there's no local fallback, so let the outer catch
@@ -186,12 +187,14 @@ export class ProxyRouter extends EventEmitter<ProxyRouterEvents> {
           }
 
           // Configured but no full sync confirmed yet and we think we're online —
-          // try the server first. If it fails with a network error, fall through to
-          // serve from local data (which may exist from a previous session's
-          // snapshot). fullSyncConfirmed is recovered from the persisted snapshot on
-          // SW restart (see configure()), so this condition only applies when no
-          // previous sync data exists at all.
-          if (!this.fullSyncConfirmed && this.online) {
+          // try the server first for file listing and non-fs requests. For individual
+          // files, we try to serve them locally first (if synced), and fall back
+          // to proxying to the server.
+          if (
+            !this.fullSyncConfirmed &&
+            this.online &&
+            (!pathname.startsWith(fsEndpoint) || !path)
+          ) {
             try {
               return await fetch(request);
             } catch (e: any) {

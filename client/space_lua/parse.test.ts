@@ -1,6 +1,6 @@
 import { expect, test } from "vitest";
-import { parse, parseExpressionString, stripLuaComments } from "./parse.ts";
 import type { LuaNumberLiteral } from "./ast.ts";
+import { parse, parseExpressionString, stripLuaComments } from "./parse.ts";
 
 test("Test Lua parser", () => {
   // Basic block test

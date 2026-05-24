@@ -1,12 +1,12 @@
-import { expect, test } from "vitest";
-import { parse } from "./parse.ts";
-import { luaBuildStandardEnv } from "./stdlib.ts";
-import { LuaEnv, LuaRuntimeError, LuaStackFrame } from "./runtime.ts";
-import { evalStatement } from "./eval.ts";
-import { readFile } from "node:fs/promises";
-import { fileURLToPath } from "node:url";
-import { dirname } from "node:path";
 import { readdirSync } from "node:fs";
+import { readFile } from "node:fs/promises";
+import { dirname } from "node:path";
+import { fileURLToPath } from "node:url";
+import { expect, test } from "vitest";
+import { evalStatement } from "./eval.ts";
+import { parse } from "./parse.ts";
+import { LuaEnv, LuaRuntimeError, LuaStackFrame } from "./runtime.ts";
+import { luaBuildStandardEnv } from "./stdlib.ts";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 

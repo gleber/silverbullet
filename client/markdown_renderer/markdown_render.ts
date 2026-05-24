@@ -1,4 +1,11 @@
 import {
+  encodePageURI,
+  encodeRef,
+  parseToRef,
+} from "@silverbulletmd/silverbullet/lib/ref";
+import { extractHashtag } from "@silverbulletmd/silverbullet/lib/tags";
+import { parseTransclusion } from "@silverbulletmd/silverbullet/lib/transclusion";
+import {
   addParentPointers,
   collectNodesOfType,
   findNodeOfType,
@@ -8,20 +15,12 @@ import {
   renderToText,
   traverseTree,
 } from "@silverbulletmd/silverbullet/lib/tree";
-import {
-  encodePageURI,
-  encodeRef,
-  parseToRef,
-} from "@silverbulletmd/silverbullet/lib/ref";
-import { Fragment, RawHtml, renderHtml, type Tag } from "./html_render.ts";
-import { CustomSyntaxRenderedHtmlType } from "./inline.ts";
-import * as TagConstants from "../../plugs/index/constants.ts";
-import { extractHashtag } from "@silverbulletmd/silverbullet/lib/tags";
-import { justifiedTableRender } from "./justified_tables.ts";
 import type { PageMeta } from "@silverbulletmd/silverbullet/type/index";
-import { createMediaElement } from "./inline.ts";
-import { parseTransclusion } from "@silverbulletmd/silverbullet/lib/transclusion";
+import * as TagConstants from "../../plugs/index/constants.ts";
 import { parseHtmlTag } from "../codemirror/html_element.ts";
+import { Fragment, RawHtml, renderHtml, type Tag } from "./html_render.ts";
+import { CustomSyntaxRenderedHtmlType, createMediaElement } from "./inline.ts";
+import { justifiedTableRender } from "./justified_tables.ts";
 
 export type MarkdownRenderOptions = {
   failOnUnknown?: true;
@@ -407,8 +406,8 @@ function render(t: ParseTree, options: MarkdownRenderOptions = {}): Tag | null {
     case "Hashtag": {
       const tagText: string = t.children![0].text!;
       const tagName = extractHashtag(tagText);
-      const link = options.resolveTagHref?.(tagName) ??
-        TagConstants.tagPrefix + tagName;
+      const link =
+        options.resolveTagHref?.(tagName) ?? TagConstants.tagPrefix + tagName;
       return {
         name: "a",
         attrs: {
@@ -457,8 +456,8 @@ function render(t: ParseTree, options: MarkdownRenderOptions = {}): Tag | null {
         name: "span",
         attrs: externalTaskRef
           ? {
-            "data-external-task-ref": externalTaskRef,
-          }
+              "data-external-task-ref": externalTaskRef,
+            }
           : {},
         body: cleanTags(mapRender(t.children!)),
       };
@@ -741,9 +740,10 @@ function renderHtmlBlock(
         if (parsed) {
           stack.push({
             name: parsed.tagName,
-            attrs: Object.keys(parsed.parsedAttrs).length > 0
-              ? parsed.parsedAttrs
-              : undefined,
+            attrs:
+              Object.keys(parsed.parsedAttrs).length > 0
+                ? parsed.parsedAttrs
+                : undefined,
             body: [],
           });
         } else {
@@ -803,10 +803,7 @@ function renderHtmlBlock(
   };
 }
 
-type RenderFn = (
-  t: ParseTree,
-  options: MarkdownRenderOptions,
-) => Tag | null;
+type RenderFn = (t: ParseTree, options: MarkdownRenderOptions) => Tag | null;
 
 function groupInlineHtml(
   children: ParseTree[],
@@ -855,9 +852,10 @@ function groupInlineHtml(
           }
           if (j < children.length) {
             const innerChildren = children.slice(i + 1, j);
-            const attrs = Object.keys(parsed.parsedAttrs).length > 0
-              ? parsed.parsedAttrs
-              : undefined;
+            const attrs =
+              Object.keys(parsed.parsedAttrs).length > 0
+                ? parsed.parsedAttrs
+                : undefined;
             result.push({
               name: parsed.tagName,
               attrs,

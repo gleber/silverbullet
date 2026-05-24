@@ -1,17 +1,18 @@
+import {
+  collectNodesOfType,
+  renderToText,
+} from "@silverbulletmd/silverbullet/lib/tree";
 import { index, lua, markdown } from "@silverbulletmd/silverbullet/syscalls";
+import type { ObjectValue } from "@silverbulletmd/silverbullet/type/index";
+import type { LuaCollectionQuery } from "../../client/space_lua/query_collection.ts";
+import { applyPatches, type YamlPatch } from "../../plug-api/lib/yaml.ts";
 import {
   extractFrontMatter as extractFrontmatterFromTree,
   type FrontMatter,
   type FrontMatterExtractOptions,
 } from "./frontmatter.ts";
-import {
-  collectNodesOfType,
-  renderToText,
-} from "@silverbulletmd/silverbullet/lib/tree";
-import { applyPatches, type YamlPatch } from "../../plug-api/lib/yaml.ts";
-import type { LuaCollectionQuery } from "../../client/space_lua/query_collection.ts";
-import type { ObjectValue } from "@silverbulletmd/silverbullet/type/index";
 import type { ResolveAnchorResult } from "./types.ts";
+
 export type { AnchorHit, ResolveAnchorResult } from "./types.ts";
 
 /*

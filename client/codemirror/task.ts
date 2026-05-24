@@ -1,9 +1,9 @@
-import { syntaxTree } from "@codemirror/language";
 import {
-  startCompletion,
   closeCompletion,
   completionStatus,
+  startCompletion,
 } from "@codemirror/autocomplete";
+import { syntaxTree } from "@codemirror/language";
 import { Decoration, type EditorView, WidgetType } from "@codemirror/view";
 import type { NodeType } from "@lezer/common";
 import { decoratorStateField, isCursorInRange } from "./util.ts";

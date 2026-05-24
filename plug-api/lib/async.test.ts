@@ -1,8 +1,8 @@
 import { expect, test } from "vitest";
 import {
   batchRequests,
-  processWithConcurrency,
   PromiseQueue,
+  processWithConcurrency,
   sleep,
 } from "./async.ts";
 

@@ -1,20 +1,19 @@
-import type { EditorState } from "@codemirror/state";
 import { syntaxTree } from "@codemirror/language";
+import type { EditorState } from "@codemirror/state";
 import { Decoration, WidgetType } from "@codemirror/view";
+import {
+  type ParseTree,
+  renderToText,
+} from "@silverbulletmd/silverbullet/lib/tree";
+import type { Client } from "../client.ts";
+import { lezerToParseTree } from "../markdown_parser/parse_tree.ts";
+import { expandMarkdown } from "../markdown_renderer/inline.ts";
+import { renderMarkdownToHtml } from "../markdown_renderer/markdown_render.ts";
 import {
   decoratorStateField,
   hideBlockSource,
   isCursorInRange,
 } from "./util.ts";
-
-import { renderMarkdownToHtml } from "../markdown_renderer/markdown_render.ts";
-import {
-  type ParseTree,
-  renderToText,
-} from "@silverbulletmd/silverbullet/lib/tree";
-import { lezerToParseTree } from "../markdown_parser/parse_tree.ts";
-import type { Client } from "../client.ts";
-import { expandMarkdown } from "../markdown_renderer/inline.ts";
 import {
   attachWidgetEventHandlers,
   buildTranslateUrls,

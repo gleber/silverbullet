@@ -1,7 +1,7 @@
-import { parseMarkdown } from "../../client/markdown_parser/parser.ts";
-import { createMockSystem } from "../../plug-api/system_mock.ts";
 import { expect, test } from "vitest";
+import { parseMarkdown } from "../../client/markdown_parser/parser.ts";
 import { addParentPointers, renderToText } from "../../plug-api/lib/tree.ts";
+import { createMockSystem } from "../../plug-api/system_mock.ts";
 import { completeStates, removeCompletedTasksFromTree } from "./task.ts";
 
 function removeCompleted(md: string): string {

@@ -1,9 +1,9 @@
 import { expect, test } from "vitest";
 import {
   jsToLuaValue,
-  luaLen,
   LuaMultiRes,
   LuaStackFrame,
+  luaLen,
   luaToString,
 } from "./runtime.ts";
 

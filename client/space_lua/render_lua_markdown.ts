@@ -3,9 +3,9 @@ import {
   escapeRegularPipes,
   jsonToMDTable,
 } from "../markdown_renderer/result_render.ts";
-import { isSqlNull } from "../space_lua/sliq_null.ts";
 import { isTaggedFloat } from "../space_lua/numeric.ts";
 import { LuaTable, luaFormatNumber } from "../space_lua/runtime.ts";
+import { isSqlNull } from "../space_lua/sliq_null.ts";
 
 /**
  * Applies some heuristics to figure out if a string should be rendered

@@ -1,19 +1,40 @@
-import { PlugNamespaceHook } from "./plugos/hooks/plug_namespace.ts";
 import type { SilverBulletHooks } from "@silverbulletmd/silverbullet/type/manifest";
-import type { EventHook } from "./plugos/hooks/event.ts";
-import { WorkerSandbox } from "./plugos/sandboxes/worker_sandbox.ts";
-
-import assetSyscalls from "./plugos/syscalls/asset.ts";
-import { System } from "./plugos/system.ts";
+import { builtinPlugPaths } from "../plugs/builtin_plugs.ts";
 import type { Client } from "./client.ts";
+import { createCommandKeyBindings } from "./codemirror/editor_state.ts";
+import type { DataStore } from "./data/datastore.ts";
+import type { DataStoreMQ } from "./data/mq.datastore.ts";
+import type { ObjectIndex } from "./data/object_index.ts";
+import { registerEditorCommands } from "./editor_commands.ts";
 import { CodeWidgetHook } from "./plugos/hooks/code_widget.ts";
 import { CommandHook } from "./plugos/hooks/command.ts";
+import { DocumentEditorHook } from "./plugos/hooks/document_editor.ts";
+import type { EventHook } from "./plugos/hooks/event.ts";
+import { MQHook } from "./plugos/hooks/mq.ts";
+import { PlugNamespaceHook } from "./plugos/hooks/plug_namespace.ts";
 import { SlashCommandHook } from "./plugos/hooks/slash_command.ts";
 import { SyscallHook } from "./plugos/hooks/syscall.ts";
+import { KVPrimitivesManifestCache } from "./plugos/manifest_cache.ts";
+import { WorkerSandbox } from "./plugos/sandboxes/worker_sandbox.ts";
+import assetSyscalls from "./plugos/syscalls/asset.ts";
+import { clientCodeWidgetSyscalls } from "./plugos/syscalls/client_code_widget.ts";
 import { clientStoreSyscalls } from "./plugos/syscalls/clientStore.ts";
+import { codeWidgetSyscalls } from "./plugos/syscalls/code_widget.ts";
+import { configSyscalls } from "./plugos/syscalls/config.ts";
+import {
+  dataStoreReadSyscalls,
+  dataStoreWriteSyscalls,
+} from "./plugos/syscalls/datastore.ts";
 import { editorSyscalls } from "./plugos/syscalls/editor.ts";
+import { eventSyscalls } from "./plugos/syscalls/event.ts";
 import { sandboxFetchSyscalls } from "./plugos/syscalls/fetch.ts";
+import { indexSyscalls } from "./plugos/syscalls/index.ts";
+import { jsonschemaSyscalls } from "./plugos/syscalls/jsonschema.ts";
+import { languageSyscalls } from "./plugos/syscalls/language.ts";
+import { luaSyscalls } from "./plugos/syscalls/lua.ts";
 import { markdownSyscalls } from "./plugos/syscalls/markdown.ts";
+import { mqSyscalls } from "./plugos/syscalls/mq.ts";
+import { serviceRegistrySyscalls } from "./plugos/syscalls/service_registry.ts";
 import { shellSyscalls } from "./plugos/syscalls/shell.ts";
 import {
   spaceReadSyscalls,
@@ -21,33 +42,11 @@ import {
 } from "./plugos/syscalls/space.ts";
 import { syncSyscalls } from "./plugos/syscalls/sync.ts";
 import { systemSyscalls } from "./plugos/syscalls/system.ts";
-import type { Space } from "./space.ts";
-import { MQHook } from "./plugos/hooks/mq.ts";
-import { mqSyscalls } from "./plugos/syscalls/mq.ts";
-import {
-  dataStoreReadSyscalls,
-  dataStoreWriteSyscalls,
-} from "./plugos/syscalls/datastore.ts";
-import type { DataStore } from "./data/datastore.ts";
-import { languageSyscalls } from "./plugos/syscalls/language.ts";
-import { codeWidgetSyscalls } from "./plugos/syscalls/code_widget.ts";
-import { clientCodeWidgetSyscalls } from "./plugos/syscalls/client_code_widget.ts";
-import { KVPrimitivesManifestCache } from "./plugos/manifest_cache.ts";
-import { createCommandKeyBindings } from "./codemirror/editor_state.ts";
-import type { DataStoreMQ } from "./data/mq.datastore.ts";
-import { jsonschemaSyscalls } from "./plugos/syscalls/jsonschema.ts";
-import { luaSyscalls } from "./plugos/syscalls/lua.ts";
-import { indexSyscalls } from "./plugos/syscalls/index.ts";
-import { configSyscalls } from "./plugos/syscalls/config.ts";
-import { eventSyscalls } from "./plugos/syscalls/event.ts";
-import { DocumentEditorHook } from "./plugos/hooks/document_editor.ts";
-import type { Command } from "./types/command.ts";
-import { SpaceLuaEnvironment } from "./space_lua.ts";
-import { builtinPlugPaths } from "../plugs/builtin_plugs.ts";
-import { registerEditorCommands } from "./editor_commands.ts";
+import { System } from "./plugos/system.ts";
 import { ServiceRegistry } from "./service_registry.ts";
-import { serviceRegistrySyscalls } from "./plugos/syscalls/service_registry.ts";
-import type { ObjectIndex } from "./data/object_index.ts";
+import type { Space } from "./space.ts";
+import { SpaceLuaEnvironment } from "./space_lua.ts";
+import type { Command } from "./types/command.ts";
 
 const mqTimeout = 10000; // 10s
 const mqTimeoutRetry = 3;
@@ -224,11 +223,7 @@ export class ClientSystem {
   }
 
   async loadPlugFromPath(path: string, lastModified: number) {
-    await this.system.loadPlug(
-      WorkerSandbox.forPath(path),
-      path,
-      lastModified,
-    );
+    await this.system.loadPlug(WorkerSandbox.forPath(path), path, lastModified);
   }
 
   async reloadPlugsFromSpace(space: Space) {
@@ -246,11 +241,10 @@ export class ClientSystem {
 
     await Promise.all(
       allPlugs.map((fileMeta) =>
-        this.loadPlugFromPath(fileMeta.name, fileMeta.lastModified).catch(
-          (e) =>
-            console.error(
-              `Could not load plug ${fileMeta.name} error: ${e.message}`,
-            ),
+        this.loadPlugFromPath(fileMeta.name, fileMeta.lastModified).catch((e) =>
+          console.error(
+            `Could not load plug ${fileMeta.name} error: ${e.message}`,
+          ),
         ),
       ),
     );

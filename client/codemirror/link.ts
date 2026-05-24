@@ -1,16 +1,16 @@
+import { syntaxTree } from "@codemirror/language";
+import { Decoration } from "@codemirror/view";
 import {
   isLocalURL,
   resolveMarkdownLink,
 } from "@silverbulletmd/silverbullet/lib/resolve";
 import type { Client } from "../client.ts";
-import { syntaxTree } from "@codemirror/language";
-import { Decoration } from "@codemirror/view";
+import { mdLinkRegex } from "../markdown_parser/constants.ts";
 import {
   decoratorStateField,
   invisibleDecoration,
   isCursorInRange,
 } from "./util.ts";
-import { mdLinkRegex } from "../markdown_parser/constants.ts";
 
 export function linkPlugin(client: Client) {
   return decoratorStateField((state) => {

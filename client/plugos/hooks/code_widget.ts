@@ -1,7 +1,7 @@
-import type { Hook, Manifest } from "../types.ts";
-import type { System } from "../system.ts";
-import type { CodeWidgetT } from "@silverbulletmd/silverbullet/type/manifest";
 import type { CodeWidgetCallback } from "@silverbulletmd/silverbullet/type/client";
+import type { CodeWidgetT } from "@silverbulletmd/silverbullet/type/manifest";
+import type { System } from "../system.ts";
+import type { Hook, Manifest } from "../types.ts";
 
 export class CodeWidgetHook implements Hook<CodeWidgetT> {
   codeWidgetCallbacks = new Map<string, CodeWidgetCallback>();

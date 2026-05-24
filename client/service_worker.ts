@@ -1,24 +1,23 @@
-import { initLogger } from "./lib/logger.ts";
-import { ProxyRouter } from "./service_worker/proxy_router.ts";
-
-import { SyncEngine } from "./service_worker/sync_engine.ts";
-import type {
-  ServiceWorkerSourceMessage,
-  ServiceWorkerTargetMessage,
-} from "./types/ui.ts";
+import { wrongSpacePathError } from "@silverbulletmd/silverbullet/constants";
+import { throttleImmediately } from "@silverbulletmd/silverbullet/lib/async";
 import {
   deriveDbName,
   exportKey,
   importKey,
 } from "@silverbulletmd/silverbullet/lib/crypto";
+import { EncryptedKvPrimitives } from "./data/encrypted_kv_primitives.ts";
 import { IndexedDBKvPrimitives } from "./data/indexeddb_kv_primitives.ts";
+import type { KvPrimitives } from "./data/kv_primitives.ts";
+import { initLogger } from "./lib/logger.ts";
+import { ProxyRouter } from "./service_worker/proxy_router.ts";
+import { SyncEngine } from "./service_worker/sync_engine.ts";
 import { fsEndpoint } from "./spaces/constants.ts";
 import { DataStoreSpacePrimitives } from "./spaces/datastore_space_primitives.ts";
 import { HttpSpacePrimitives } from "./spaces/http_space_primitives.ts";
-import { throttleImmediately } from "@silverbulletmd/silverbullet/lib/async";
-import { wrongSpacePathError } from "@silverbulletmd/silverbullet/constants";
-import type { KvPrimitives } from "./data/kv_primitives.ts";
-import { EncryptedKvPrimitives } from "./data/encrypted_kv_primitives.ts";
+import type {
+  ServiceWorkerSourceMessage,
+  ServiceWorkerTargetMessage,
+} from "./types/ui.ts";
 
 const logger = initLogger("[Service Worker]");
 
@@ -155,6 +154,7 @@ self.addEventListener("message", async (event: any) => {
         proxyRouter.syncEngine!.setSyncConfig({
           syncDocuments: config.syncDocuments,
           syncIgnore: config.syncIgnore,
+          syncConcurrency: config.syncConcurrency,
         });
 
         return;
@@ -242,6 +242,7 @@ self.addEventListener("message", async (event: any) => {
         syncEngine.setSyncConfig({
           syncDocuments: config.syncDocuments,
           syncIgnore: config.syncIgnore,
+          syncConcurrency: config.syncConcurrency,
         });
         await syncEngine.start();
 

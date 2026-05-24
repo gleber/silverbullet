@@ -1,4 +1,4 @@
-import { luaBuildStandardEnv } from "./space_lua/stdlib.ts";
+import type { System } from "./plugos/system.ts";
 import {
   LuaBuiltinFunction,
   LuaEnv,
@@ -7,7 +7,7 @@ import {
   LuaStackFrame,
   LuaTable,
 } from "./space_lua/runtime.ts";
-import type { System } from "./plugos/system.ts";
+import { luaBuildStandardEnv } from "./space_lua/stdlib.ts";
 import { resolveASTReference } from "./space_lua.ts";
 
 export function buildLuaEnv(system: System<any>) {

@@ -1,8 +1,8 @@
-import { FilterList } from "./filter.tsx";
-import { Terminal } from "preact-feather";
-import type { Command } from "../types/command.ts";
 import type { FilterOption } from "@silverbulletmd/silverbullet/type/client";
+import { Terminal } from "preact-feather";
 import { isMacLike, prettifyShortcut } from "../../plug-api/lib/shortcut.ts";
+import type { Command } from "../types/command.ts";
+import { FilterList } from "./filter.tsx";
 
 export function CommandPalette({
   commands,
@@ -47,7 +47,10 @@ export function CommandPalette({
   );
 }
 
-export function keyboardHint(def: { key?: string | string[]; mac?: string | string[] }): string | undefined {
+export function keyboardHint(def: {
+  key?: string | string[];
+  mac?: string | string[];
+}): string | undefined {
   const shortcuts: string[] = [];
   if (isMacLike && def.mac) {
     if (Array.isArray(def.mac)) {

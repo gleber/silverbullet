@@ -1,21 +1,21 @@
-import type { EditorState, Range } from "@codemirror/state";
 import { syntaxTree } from "@codemirror/language";
+import type { EditorState, Range } from "@codemirror/state";
 import { Decoration, WidgetType } from "@codemirror/view";
+import type { ParseTree } from "@silverbulletmd/silverbullet/lib/tree";
+import type { Client } from "../client.ts";
+import { lezerToParseTree } from "../markdown_parser/parse_tree.ts";
+import { expandMarkdown } from "../markdown_renderer/inline.ts";
+import { renderMarkdownToHtml } from "../markdown_renderer/markdown_render.ts";
+import { matchHtmlTagPairs, parseHtmlTag } from "./html_element.ts";
 import {
   decoratorStateField,
   invisibleDecoration,
   isCursorInRange,
 } from "./util.ts";
-import { renderMarkdownToHtml } from "../markdown_renderer/markdown_render.ts";
-import { expandMarkdown } from "../markdown_renderer/inline.ts";
-import type { ParseTree } from "@silverbulletmd/silverbullet/lib/tree";
-import { lezerToParseTree } from "../markdown_parser/parse_tree.ts";
-import type { Client } from "../client.ts";
 import {
   attachWidgetEventHandlers,
   buildTranslateUrls,
 } from "./widget_util.ts";
-import { matchHtmlTagPairs, parseHtmlTag } from "./html_element.ts";
 
 /**
  * Widget that renders an HTMLBlock or a slice of inline HTML as HTML, by
@@ -94,10 +94,7 @@ export function htmlBlockPlugin(client: Client) {
         if (isCursorInRange(state, [from, to])) return;
 
         const sourceText = state.sliceDoc(from, to);
-        const parseTree = lezerToParseTree(
-          state.sliceDoc(0, to),
-          node.node,
-        );
+        const parseTree = lezerToParseTree(state.sliceDoc(0, to), node.node);
 
         widgets.push(invisibleDecoration.range(from, to));
         widgets.push(
@@ -208,11 +205,12 @@ export function htmlInlinePlugin(client: Client) {
           // Pick out the children of the paragraph that fall within the
           // matched range. lezerToParseTree interleaves text fillers between
           // structural children, and the same [from,to] check picks both up.
-          const childrenInRange = (ptree.children ?? []).filter((c) =>
-            c.from !== undefined &&
-            c.to !== undefined &&
-            c.from >= rangeFrom &&
-            c.to <= rangeTo
+          const childrenInRange = (ptree.children ?? []).filter(
+            (c) =>
+              c.from !== undefined &&
+              c.to !== undefined &&
+              c.from >= rangeFrom &&
+              c.to <= rangeTo,
           );
           if (childrenInRange.length === 0) return;
 

@@ -2,13 +2,13 @@ import { expect, test } from "vitest";
 import { parse } from "../markdown_parser/parse_tree.ts";
 import { extendedMarkdownLanguage } from "../markdown_parser/parser.ts";
 import { renderMarkdownToHtml } from "../markdown_renderer/markdown_render.ts";
-import { SLIQ_NULL } from "./sliq_null.ts";
 import { makeLuaFloat } from "./numeric.ts";
 import {
   renderResultToCleanMarkdown,
   renderResultToMarkdown,
 } from "./render_lua_markdown.ts";
 import { LuaTable } from "./runtime.ts";
+import { SLIQ_NULL } from "./sliq_null.ts";
 
 // Helper: render a value all the way to final HTML.
 function toHtml(value: any): string {
@@ -673,9 +673,9 @@ test("clean: scalar JS array in cell is joined with <br/>", async () => {
 });
 
 test("clean: pipe inside scalar array cell is escaped", async () => {
-  expect(
-    await renderResultToCleanMarkdown({ vals: ["a|b", "c"] }),
-  ).toBe("|vals|\n|--|\n|a\\|b<br/>c|");
+  expect(await renderResultToCleanMarkdown({ vals: ["a|b", "c"] })).toBe(
+    "|vals|\n|--|\n|a\\|b<br/>c|",
+  );
 });
 
 test("clean: SLIQ_NULL cell renders as empty", async () => {

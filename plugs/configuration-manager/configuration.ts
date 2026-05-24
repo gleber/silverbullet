@@ -7,14 +7,14 @@ import {
   sync,
   system,
 } from "@silverbulletmd/silverbullet/syscalls";
-import { buildConfigurationHtml } from "./configuration_html.ts";
-import { type CommandOverride, parseManagedBlock, toLua } from "./lua.ts";
 import {
   findManagedBlock,
   MANAGED_MARKER,
   replaceManagedBlock,
 } from "./config_block.ts";
+import { buildConfigurationHtml } from "./configuration_html.ts";
 import { listLibraries } from "./libraries.ts";
+import { type CommandOverride, parseManagedBlock, toLua } from "./lua.ts";
 import type { LibrariesFocus, TabId } from "./ui/types.ts";
 
 const CONFIG_PAGE = "CONFIG";

@@ -1,13 +1,14 @@
 /**
  * This is where the sync magic happens
  */
-import type { SpacePrimitives } from "./space_primitives.ts";
-import { EventEmitter } from "../plugos/event.ts";
-import type { FileMeta } from "@silverbulletmd/silverbullet/type/index";
+
 import { notFoundError } from "@silverbulletmd/silverbullet/constants";
 import { processWithConcurrency } from "@silverbulletmd/silverbullet/lib/async";
+import type { FileMeta } from "@silverbulletmd/silverbullet/type/index";
+import { EventEmitter } from "../plugos/event.ts";
+import type { SpacePrimitives } from "./space_primitives.ts";
 
-const syncConcurrency = 3;
+const defaultSyncConcurrency = 10;
 
 // In practice this is the lastModified timestamp
 type SyncHash = number;
@@ -53,6 +54,7 @@ export type SyncOptions = {
     secondarySpace: SpacePrimitives,
   ) => Promise<number>;
   isSyncCandidate: (path: string) => boolean;
+  syncConcurrency?: number;
 };
 
 export type SyncEvents = {
@@ -61,6 +63,7 @@ export type SyncEvents = {
     snapshot: SyncSnapshot,
   ) => void | Promise<void>;
   snapshotUpdated: (snapshot: SyncSnapshot) => void | Promise<void>;
+  fileSyncComplete: (path: string, operations: number) => void | Promise<void>;
 };
 
 // Implementation of this algorithm: https://unterwaditzer.net/2016/sync-algorithm.html
@@ -150,7 +153,7 @@ export class SpaceSync extends EventEmitter<SyncEvents> {
             );
           }
         },
-        syncConcurrency,
+        this.options.syncConcurrency ?? defaultSyncConcurrency,
       );
       console.log(
         "[Sync]",
@@ -484,7 +487,9 @@ export class SpaceSync extends EventEmitter<SyncEvents> {
       snapshot.nonSyncedFiles.set(path, secondaryMeta);
       operations += 1;
     } else if (
-      primaryMeta && secondaryMeta && snapshot.files.has(path) &&
+      primaryMeta &&
+      secondaryMeta &&
+      snapshot.files.has(path) &&
       primaryMeta.size !== secondaryMeta.size
     ) {
       // Sizes differ despite matching timestamps — silent content change
@@ -507,6 +512,9 @@ export class SpaceSync extends EventEmitter<SyncEvents> {
       }
     }
     // End scene
+    if (operations > 0) {
+      void this.emit("fileSyncComplete", path, operations);
+    }
     return operations;
   }
 

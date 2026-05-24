@@ -1,10 +1,9 @@
+import { isTaggedFloat } from "../numeric.ts";
 import {
   LuaBuiltinFunction,
   LuaMultiRes,
   LuaRuntimeError,
 } from "../runtime.ts";
-
-import { isTaggedFloat } from "../numeric.ts";
 
 function untagN(x: any): number {
   if (typeof x === "number") return x;

@@ -1,10 +1,13 @@
-import { parseExpressionString } from "./parse.ts";
-import { evalExpression } from "./eval.ts";
+import { expect, test } from "vitest";
+import { Config } from "../config.ts";
 import {
   type AggregateSpec,
   executeAggregate,
   getAggregateSpec,
 } from "./aggregates.ts";
+import type { LuaOrderBy } from "./ast.ts";
+import { evalExpression } from "./eval.ts";
+import { parseExpressionString } from "./parse.ts";
 import {
   applyQuery,
   evalExpressionWithAggregates,
@@ -17,9 +20,6 @@ import {
   LuaTable,
   luaValueToJS,
 } from "./runtime.ts";
-import type { LuaOrderBy } from "./ast.ts";
-import { expect, test } from "vitest";
-import { Config } from "../config.ts";
 
 function makeConfig(specs: Record<string, AggregateSpec> = {}): Config {
   const config = new Config();

@@ -1,41 +1,41 @@
+import { evalStatement } from "./eval.ts";
+import { isTaggedFloat, makeLuaFloat } from "./numeric.ts";
+import { parse } from "./parse.ts";
+import { isPromise } from "./rp.ts";
 import {
   getMetatable,
   type ILuaFunction,
   isILuaFunction,
   isLuaTable,
   LuaBuiltinFunction,
-  luaCall,
-  luaCloseFromMark,
-  luaEnsureCloseStack,
   LuaEnv,
-  luaGet,
-  luaKeys,
-  luaLen,
   LuaMultiRes,
   LuaRuntimeError,
   type LuaStackFrame,
   type LuaTable,
+  type LuaValue,
+  luaCall,
+  luaCloseFromMark,
+  luaEnsureCloseStack,
+  luaGet,
+  luaKeys,
+  luaLen,
   luaToString,
   luaTypeOf,
-  type LuaValue,
   singleResult,
 } from "./runtime.ts";
+import { isSqlNull } from "./sliq_null.ts";
+import { cryptoApi } from "./stdlib/crypto.ts";
+import { encodingApi } from "./stdlib/encoding.ts";
+import { jsApi } from "./stdlib/js.ts";
+import { luaLoad } from "./stdlib/load.ts";
+import { mathApi } from "./stdlib/math.ts";
+import { netApi } from "./stdlib/net.ts";
+import { osApi } from "./stdlib/os.ts";
+import { spaceluaApi } from "./stdlib/space_lua.ts";
 import { stringApi } from "./stdlib/string.ts";
 import { tableApi } from "./stdlib/table.ts";
-import { osApi } from "./stdlib/os.ts";
-import { jsApi } from "./stdlib/js.ts";
-import { spaceluaApi } from "./stdlib/space_lua.ts";
-import { mathApi } from "./stdlib/math.ts";
-import { parse } from "./parse.ts";
-import { evalStatement } from "./eval.ts";
-import { encodingApi } from "./stdlib/encoding.ts";
 import { luaToNumberDetailed } from "./tonumber.ts";
-import { luaLoad } from "./stdlib/load.ts";
-import { cryptoApi } from "./stdlib/crypto.ts";
-import { netApi } from "./stdlib/net.ts";
-import { isTaggedFloat, makeLuaFloat } from "./numeric.ts";
-import { isPromise } from "./rp.ts";
-import { isSqlNull } from "./sliq_null.ts";
 
 const printFunction = new LuaBuiltinFunction(async (_sf, ...args) => {
   console.log("[Lua]", ...(await Promise.all(args.map((v) => luaToString(v)))));

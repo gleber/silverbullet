@@ -278,7 +278,6 @@ test("DataStore MQ - Queue Pause Throttling", async () => {
   system.addHook(eventHook);
   const mq = new DataStoreMQ(ds, eventHook);
 
-
   try {
     const queue = "test-pause";
     let processed = false;

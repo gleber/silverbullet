@@ -1,6 +1,4 @@
-import type { KvPrimitives, KvQueryOptions } from "./kv_primitives.ts";
-
-import type { KV, KvKey } from "../../plug-api/types/datastore.ts";
+import { decode, encode } from "@msgpack/msgpack";
 import {
   decryptAesGcm,
   decryptStringDeterministic,
@@ -8,8 +6,8 @@ import {
   encryptAesGcm,
   encryptStringDeterministic,
 } from "@silverbulletmd/silverbullet/lib/crypto";
-
-import { decode, encode } from "@msgpack/msgpack";
+import type { KV, KvKey } from "../../plug-api/types/datastore.ts";
+import type { KvPrimitives, KvQueryOptions } from "./kv_primitives.ts";
 
 export class EncryptedKvPrimitives implements KvPrimitives {
   private keyKey: CryptoKey;

@@ -1,4 +1,3 @@
-import { expect, test } from "vitest";
 import {
   decryptAesGcm,
   decryptStringDeterministic,
@@ -7,6 +6,7 @@ import {
   encryptAesGcm,
   encryptStringDeterministic,
 } from "@silverbulletmd/silverbullet/lib/crypto";
+import { expect, test } from "vitest";
 
 test("Crypto test", async () => {
   const salt = new Uint8Array(16); // zeroes for testing

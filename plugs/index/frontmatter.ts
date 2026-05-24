@@ -1,3 +1,5 @@
+import { cleanupJSON } from "@silverbulletmd/silverbullet/lib/json";
+import { extractHashtag } from "@silverbulletmd/silverbullet/lib/tags";
 import {
   addParentPointers,
   findNodeOfType,
@@ -6,10 +8,8 @@ import {
   renderToText,
   replaceNodesMatching,
 } from "@silverbulletmd/silverbullet/lib/tree";
-import { cleanupJSON } from "@silverbulletmd/silverbullet/lib/json";
-import YAML from "js-yaml";
-import { extractHashtag } from "@silverbulletmd/silverbullet/lib/tags";
 import type { CompleteEvent } from "@silverbulletmd/silverbullet/type/client";
+import YAML from "js-yaml";
 import { determineTags } from "./cheap_yaml.ts";
 import { attributeCompletion } from "./complete.ts";
 

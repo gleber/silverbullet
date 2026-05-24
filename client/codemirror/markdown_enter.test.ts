@@ -1,14 +1,15 @@
-import { describe, expect, test } from "vitest";
-import { EditorSelection, EditorState } from "@codemirror/state";
 import { markdown } from "@codemirror/lang-markdown";
 import { ensureSyntaxTree } from "@codemirror/language";
+import { EditorSelection, EditorState } from "@codemirror/state";
+import { describe, expect, test } from "vitest";
 import { customEnterCommand } from "./markdown_enter.ts";
 
 const CURSOR = "|^|";
 
 function runEnter(input: string): string | false {
   const cursorPos = input.indexOf(CURSOR);
-  const doc = input.slice(0, cursorPos) + input.slice(cursorPos + CURSOR.length);
+  const doc =
+    input.slice(0, cursorPos) + input.slice(cursorPos + CURSOR.length);
 
   const state = EditorState.create({
     doc,

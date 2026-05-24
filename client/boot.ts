@@ -1,20 +1,20 @@
-import { race, safeRun, sleep } from "@silverbulletmd/silverbullet/lib/async";
 import {
   notAuthenticatedError,
   offlineError,
 } from "@silverbulletmd/silverbullet/constants";
-import { initLogger } from "./lib/logger.ts";
+import { race, safeRun, sleep } from "@silverbulletmd/silverbullet/lib/async";
 import { extractSpaceLuaFromPageText, loadConfig } from "./boot_config.ts";
 import { Client } from "./client.ts";
 import type { Config } from "./config.ts";
+import { initLogger } from "./lib/logger.ts";
 import {
   flushCachesAndUnregisterServiceWorker,
   unregisterServiceWorkers,
 } from "./service_worker/util.ts";
 import "./lib/polyfills.ts";
-import type { BootConfig, ServiceWorkerTargetMessage } from "./types/ui.ts";
-import { BoxProxy } from "./lib/box_proxy.ts";
 import { importKey } from "@silverbulletmd/silverbullet/lib/crypto";
+import { BoxProxy } from "./lib/box_proxy.ts";
+import type { BootConfig, ServiceWorkerTargetMessage } from "./types/ui.ts";
 import "./debug.ts";
 
 // Initialize the runtime-bridge namespace. `??=` preserves any value an
@@ -163,16 +163,13 @@ safeRun(async () => {
   // Skip (and tear down) the service worker when headless, when the server
   // forbids it via BootConfig.disableServiceWorker, or when the user opted
   // out locally with ?enableSW=0 (persisted to localStorage).
-  const swDisabled = !!bootConfig?.disableServiceWorker ||
+  const swDisabled =
+    !!bootConfig?.disableServiceWorker ||
     localStorage.getItem("enableSW") === "0";
   if (swDisabled && navigator.serviceWorker) {
     await flushCachesAndUnregisterServiceWorker();
   }
-  if (
-    !isHeadless &&
-    !swDisabled &&
-    navigator.serviceWorker
-  ) {
+  if (!isHeadless && !swDisabled && navigator.serviceWorker) {
     // Register service worker
     const workerURL = new URL("service_worker.js", document.baseURI);
     let startNotificationCount = 0;
@@ -280,6 +277,7 @@ async function augmentBootConfig(bootConfig: BootConfig, config: Config) {
     syncIgnore = syncIgnore.join("\n");
   }
   bootConfig.syncIgnore = syncIgnore;
+  bootConfig.syncConcurrency = config.get<number>(["sync", "concurrency"], 10);
 
   // Then we augment the config based on the URL arguments
   const urlParams = new URLSearchParams(location.search);
@@ -371,7 +369,7 @@ async function cachedFetch(path: string): Promise<string> {
     // Persist to localStorage
     localStorage.setItem(cacheKey, text);
     return text;
-  } catch (e: any) {
+  } catch (_e: any) {
     console.info("Falling back to cache for", path);
     // We may be offline, let's see if we have a cached copy
     const text = localStorage.getItem(cacheKey);

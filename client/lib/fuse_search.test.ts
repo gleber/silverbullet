@@ -1,5 +1,5 @@
-import { expect, test } from "vitest";
 import type { FilterOption } from "@silverbulletmd/silverbullet/type/client";
+import { expect, test } from "vitest";
 import { fuzzySearchAndSort } from "./fuse_search.ts";
 
 test("testFuzzyFilter", () => {

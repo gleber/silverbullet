@@ -1,8 +1,8 @@
+import { syscall } from "@silverbulletmd/silverbullet/syscall";
 import type {
   LuaCollectionQuery,
   LuaQueryCollection,
 } from "../../client/space_lua/query_collection.ts";
-import { syscall } from "@silverbulletmd/silverbullet/syscall";
 import type { ObjectValue } from "../../plug-api/types/index.ts";
 
 /**
@@ -187,6 +187,7 @@ export type {
   AnchorHit,
   ResolveAnchorResult,
 } from "../../plugs/index/types.ts";
+
 import type { ResolveAnchorResult } from "../../plugs/index/types.ts";
 
 /**

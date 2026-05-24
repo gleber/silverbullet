@@ -1,4 +1,4 @@
-import { type OutputUnit, Validator, format } from "@cfworker/json-schema";
+import { format, type OutputUnit, Validator } from "@cfworker/json-schema";
 import { stripFunctions } from "./plugos/util.ts";
 
 // Register custom formats (shared with jsonschema.ts)

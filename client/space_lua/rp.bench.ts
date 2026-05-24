@@ -1,5 +1,5 @@
-import { bench } from "vitest";
 import { readFile } from "node:fs/promises";
+import { bench } from "vitest";
 // Benchmark suite for Space Lua RP (Result-or-Promise) optimizations
 // that exercises hot synchronous paths (binary ops, loops, function
 // calls, argument lists, table get/set, concatenation).
@@ -19,6 +19,7 @@ import { readFile } from "node:fs/promises";
 // * To add benches that need more stdlib, extend makeEnv() accordingly.
 
 import { evalStatement } from "./eval.ts";
+import { parse as parseLua } from "./parse.ts";
 import {
   LuaBuiltinFunction,
   LuaEnv,
@@ -27,7 +28,6 @@ import {
   LuaTable,
   luaTypeOf,
 } from "./runtime.ts";
-import { parse as parseLua } from "./parse.ts";
 
 const LOOP = 100000;
 const SMALL = 20000;

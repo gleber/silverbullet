@@ -1,5 +1,5 @@
+import { format, type OutputUnit, Validator } from "@cfworker/json-schema";
 import type { SysCallMapping } from "../system.ts";
-import { type OutputUnit, Validator, format } from "@cfworker/json-schema";
 import { stripFunctions } from "../util.ts";
 
 // Register custom formats

@@ -1,7 +1,7 @@
 import { expect, test } from "vitest";
-import { isPromise } from "./rp.ts";
-import { parse } from "./parse.ts";
 import { evalStatement } from "./eval.ts";
+import { parse } from "./parse.ts";
+import { isPromise } from "./rp.ts";
 import { LuaEnv, LuaRuntimeError, LuaStackFrame } from "./runtime.ts";
 import { luaBuildStandardEnv } from "./stdlib.ts";
 

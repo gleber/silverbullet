@@ -1,5 +1,6 @@
 import { useCallback, useMemo, useReducer } from "preact/hooks";
 import { useCfg } from "./cfg_context.tsx";
+import type { Conflicts } from "./keys.ts";
 import {
   allActiveBindings,
   findConflicts,
@@ -10,7 +11,6 @@ import {
   seedOverrideFromManifest,
   writeBindings,
 } from "./keys.ts";
-import type { Conflicts } from "./keys.ts";
 import type { PendingShortcuts } from "./types.ts";
 
 export type ShortcutEditor = {

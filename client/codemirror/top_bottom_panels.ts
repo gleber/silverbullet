@@ -1,9 +1,9 @@
 import type { EditorState } from "@codemirror/state";
 import { Decoration, WidgetType } from "@codemirror/view";
 import type { Client } from "../client.ts";
-import { decoratorStateField } from "./util.ts";
-import { LuaWidget, type LuaWidgetContent } from "./lua_widget.ts";
 import { activeWidgets } from "./code_widget.ts";
+import { LuaWidget, type LuaWidgetContent } from "./lua_widget.ts";
+import { decoratorStateField } from "./util.ts";
 
 class ArrayWidget extends WidgetType {
   public dom?: HTMLElement;

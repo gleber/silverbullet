@@ -1,5 +1,5 @@
-import diff, { DELETE, EQUAL, INSERT } from "fast-diff";
 import type { ChangeSpec } from "@codemirror/state";
+import diff, { DELETE, EQUAL, INSERT } from "fast-diff";
 
 export function diffAndPrepareChanges(
   oldString: string,

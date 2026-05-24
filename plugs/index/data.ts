@@ -1,17 +1,17 @@
-import YAML from "js-yaml";
 import {
   collectNodesOfType,
   findNodeOfType,
   type ParseTree,
 } from "@silverbulletmd/silverbullet/lib/tree";
-import type { TagObject } from "./tags.ts";
-import type { FrontMatter } from "./frontmatter.ts";
-import { updateITags } from "./tags.ts";
 import type {
   ObjectValue,
   PageMeta,
 } from "@silverbulletmd/silverbullet/type/index";
+import YAML from "js-yaml";
 import { isValidAnchorName } from "./anchor.ts";
+import type { FrontMatter } from "./frontmatter.ts";
+import type { TagObject } from "./tags.ts";
+import { updateITags } from "./tags.ts";
 
 type DataObject = ObjectValue<
   {

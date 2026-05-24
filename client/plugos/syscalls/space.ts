@@ -1,12 +1,11 @@
 import { parseToRef, type Ref } from "@silverbulletmd/silverbullet/lib/ref";
-import type { Client } from "../../client.ts";
-import type { SysCallMapping } from "../system.ts";
-
 import type {
   DocumentMeta,
   FileMeta,
   PageMeta,
 } from "@silverbulletmd/silverbullet/type/index";
+import type { Client } from "../../client.ts";
+import type { SysCallMapping } from "../system.ts";
 
 export function spaceReadSyscalls(client: Client): SysCallMapping {
   return {

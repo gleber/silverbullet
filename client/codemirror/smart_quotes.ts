@@ -1,9 +1,8 @@
-import type { KeyBinding } from "@codemirror/view";
 import { syntaxTree } from "@codemirror/language";
 import { EditorSelection } from "@codemirror/state";
-import type { Client } from "../client.ts";
-
+import type { KeyBinding } from "@codemirror/view";
 import type { SmartQuotesConfig } from "../../plug-api/types/config.ts";
+import type { Client } from "../client.ts";
 
 const straightQuoteContexts = [
   "CommentBlock",
@@ -102,7 +101,15 @@ export function createSmartQuoteKeyBindings(client: Client): KeyBinding[] {
     return [];
   }
   return [
-    keyBindingForQuote('"', smartQuotes.double!.left!, smartQuotes.double!.right!),
-    keyBindingForQuote("'", smartQuotes.single!.left!, smartQuotes.single!.right!),
+    keyBindingForQuote(
+      '"',
+      smartQuotes.double!.left!,
+      smartQuotes.double!.right!,
+    ),
+    keyBindingForQuote(
+      "'",
+      smartQuotes.single!.left!,
+      smartQuotes.single!.right!,
+    ),
   ];
 }

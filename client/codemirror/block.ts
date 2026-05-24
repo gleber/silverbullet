@@ -1,5 +1,5 @@
-import type { EditorState } from "@codemirror/state";
 import { syntaxTree } from "@codemirror/language";
+import type { EditorState } from "@codemirror/state";
 import { Decoration } from "@codemirror/view";
 import {
   decoratorStateField,

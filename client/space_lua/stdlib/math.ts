@@ -1,10 +1,10 @@
+import { isNegativeZero, isTaggedFloat, makeLuaFloat } from "../numeric.ts";
 import {
   LuaBuiltinFunction,
   LuaMultiRes,
   LuaRuntimeError,
   LuaTable,
 } from "../runtime.ts";
-import { isNegativeZero, isTaggedFloat, makeLuaFloat } from "../numeric.ts";
 import { LuaPRNG } from "./prng.ts";
 
 // One PRNG per module load, auto-seeded at startup

@@ -1,9 +1,9 @@
-import type { Hook, Manifest } from "../types.ts";
-import type { System } from "../system.ts";
-import { EventEmitter } from "../event.ts";
 import { throttle } from "@silverbulletmd/silverbullet/lib/async";
-import type { Command, CommandHookEvents } from "../../types/command.ts";
 import type { CommandHookT } from "@silverbulletmd/silverbullet/type/manifest";
+import type { Command, CommandHookEvents } from "../../types/command.ts";
+import { EventEmitter } from "../event.ts";
+import type { System } from "../system.ts";
+import type { Hook, Manifest } from "../types.ts";
 
 export class CommandHook
   extends EventEmitter<CommandHookEvents>

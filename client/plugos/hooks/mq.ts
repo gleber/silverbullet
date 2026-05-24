@@ -117,7 +117,7 @@ export class MQHook implements Hook<MQHookT> {
           // For the indexQueue, add a mandatory inter-batch pause so the
           // worker yields the event loop between every batch, letting the main
           // thread's IDB reads and UI rendering run without starvation.
-          const interBatchDelay = queue === "indexQueue" ? 1000 : undefined;
+          const interBatchDelay = queue === "indexQueue" ? 50 : undefined;
           this.subscriptions.push(
             this.mq.subscribe(
               queue,

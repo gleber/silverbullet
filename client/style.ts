@@ -1,5 +1,5 @@
 import { HighlightStyle } from "@codemirror/language";
-import { tagHighlighter, tags as t } from "@lezer/highlight";
+import { tags as t, tagHighlighter } from "@lezer/highlight";
 import * as ct from "./markdown_parser/customtags.ts";
 
 export default function highlightStyles() {

@@ -1,9 +1,9 @@
+import type { PageMeta } from "@silverbulletmd/silverbullet/type/index";
 import { expect, test } from "vitest";
 import { parseMarkdown } from "../../client/markdown_parser/parser.ts";
-import { indexItems } from "./item.ts";
 import { createMockSystem } from "../../plug-api/system_mock.ts";
 import { extractFrontMatter } from "./frontmatter.ts";
-import type { PageMeta } from "@silverbulletmd/silverbullet/type/index";
+import { indexItems } from "./item.ts";
 
 const itemsMd = `
 * Item 1 #tag1 #tag2 [age: 100]

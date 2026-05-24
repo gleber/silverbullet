@@ -1,5 +1,9 @@
-import { EditorView } from "@codemirror/view";
 import { isolateHistory } from "@codemirror/commands";
+import { EditorView } from "@codemirror/view";
+import {
+  notFoundError,
+  offlineError,
+} from "@silverbulletmd/silverbullet/constants";
 import { throttle } from "@silverbulletmd/silverbullet/lib/async";
 import {
   getNameFromPath,
@@ -9,25 +13,21 @@ import {
   isMarkdownPath,
   type Path,
 } from "@silverbulletmd/silverbullet/lib/ref";
-import type { PageMeta } from "@silverbulletmd/silverbullet/type/index";
 import type {
   PageCreatingContent,
   PageCreatingEvent,
 } from "@silverbulletmd/silverbullet/type/event";
-import {
-  notFoundError,
-  offlineError,
-} from "@silverbulletmd/silverbullet/constants";
+import type { PageMeta } from "@silverbulletmd/silverbullet/type/index";
+import type { Client } from "./client.ts";
+import { diffAndPrepareChanges } from "./codemirror/cm_util.ts";
 import {
   createEditorState,
   externalUpdate,
 } from "./codemirror/editor_state.ts";
-import { diffAndPrepareChanges } from "./codemirror/cm_util.ts";
 import { DocumentEditor } from "./document_editor.ts";
-import { fsEndpoint } from "./spaces/constants.ts";
 import { parseMarkdown } from "./markdown_parser/parser.ts";
-import type { Client } from "./client.ts";
 import type { LocationState } from "./navigator.ts";
+import { fsEndpoint } from "./spaces/constants.ts";
 
 const frontMatterRegex = /^---\n(([^\n]|\n)*?)---\n/;
 
@@ -172,9 +172,7 @@ export class ContentManager {
    */
   private async leaveCurrentPage(newPath: string) {
     const previousPath = this.client.ui.viewState.current?.path;
-    const loadingDifferentPath = previousPath
-      ? previousPath !== newPath
-      : true;
+    const loadingDifferentPath = previousPath ? previousPath !== newPath : true;
 
     if (previousPath) {
       this.client.space.unwatchFile(previousPath);

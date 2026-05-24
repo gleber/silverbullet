@@ -1,8 +1,4 @@
-import {
-  events,
-  markdown,
-  space,
-} from "@silverbulletmd/silverbullet/syscalls";
+import { events, markdown, space } from "@silverbulletmd/silverbullet/syscalls";
 import type { MQMessage } from "@silverbulletmd/silverbullet/type/datastore";
 import type { IndexTreeEvent } from "@silverbulletmd/silverbullet/type/event";
 
@@ -35,5 +31,3 @@ async function indexFile(path: string) {
     await events.dispatchEvent("document:index", path);
   }
 }
-
-

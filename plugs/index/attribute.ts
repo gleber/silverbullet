@@ -1,11 +1,10 @@
+import { cleanupJSON } from "@silverbulletmd/silverbullet/lib/json";
 import {
   findNodeOfType,
   type ParseTree,
   replaceNodesMatching,
   traverseTree,
 } from "@silverbulletmd/silverbullet/lib/tree";
-
-import { cleanupJSON } from "@silverbulletmd/silverbullet/lib/json";
 
 import YAML from "js-yaml";
 
@@ -17,27 +16,31 @@ import YAML from "js-yaml";
 export function collectAttributes(tree: ParseTree): Record<string, any> {
   const attributes: Record<string, any> = {};
 
-  traverseTree(tree, (n) => {
-    if (tree !== n && n.type === "ListItem") {
-      // Find top-level only, no nested lists
-      return true;
-    }
-    if (n.type === "Attribute") {
-      const nameNode = findNodeOfType(n, "AttributeName");
-      const valueNode = findNodeOfType(n, "AttributeValue");
-      if (nameNode && valueNode) {
-        const name = nameNode.children![0].text!;
-        const val = valueNode.children![0].text!;
-        try {
-          attributes[name] = cleanupJSON(YAML.load(val));
-        } catch (e: any) {
-          console.error("Error parsing attribute value as YAML", val, e);
-        }
+  traverseTree(
+    tree,
+    (n) => {
+      if (tree !== n && n.type === "ListItem") {
+        // Find top-level only, no nested lists
+        return true;
       }
-      return true;
-    }
-    return false;
-  }, true);
+      if (n.type === "Attribute") {
+        const nameNode = findNodeOfType(n, "AttributeName");
+        const valueNode = findNodeOfType(n, "AttributeValue");
+        if (nameNode && valueNode) {
+          const name = nameNode.children![0].text!;
+          const val = valueNode.children![0].text!;
+          try {
+            attributes[name] = cleanupJSON(YAML.load(val));
+          } catch (e: any) {
+            console.error("Error parsing attribute value as YAML", val, e);
+          }
+        }
+        return true;
+      }
+      return false;
+    },
+    true,
+  );
 
   return attributes;
 }

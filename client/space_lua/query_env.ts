@@ -1,4 +1,4 @@
-import { LuaEnv, luaGet, luaKeys, type LuaStackFrame } from "./runtime.ts";
+import { LuaEnv, type LuaStackFrame, luaGet, luaKeys } from "./runtime.ts";
 
 /**
  * Build an environment for evaluating per-item expressions in queries.

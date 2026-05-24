@@ -1,5 +1,5 @@
-import { syscall } from "../syscall.ts";
 import type { LuaBlock, LuaExpression } from "../../client/space_lua/ast.ts";
+import { syscall } from "../syscall.ts";
 
 export function parse(code: string): Promise<LuaBlock> {
   return syscall("lua.parse", code);

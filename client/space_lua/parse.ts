@@ -1,13 +1,11 @@
-import { lezerToParseTree } from "../../client/markdown_parser/parse_tree.ts";
+import { indentNodeProp, LRLanguage } from "@codemirror/language";
 import type { SyntaxNode } from "@lezer/common";
+import { styleTags, tags as t } from "@lezer/highlight";
 import {
   cleanTree,
   type ParseTree,
 } from "@silverbulletmd/silverbullet/lib/tree";
-// @ts-expect-error - Local generated JavaScript file without type definitions
-import { parser } from "./parse-lua.js";
-import { styleTags, tags as t } from "@lezer/highlight";
-import { indentNodeProp, LRLanguage } from "@codemirror/language";
+import { lezerToParseTree } from "../../client/markdown_parser/parse_tree.ts";
 import type {
   ASTCtx,
   LuaAttName,
@@ -27,6 +25,8 @@ import type {
 } from "./ast.ts";
 import { LuaAttribute } from "./ast.ts";
 import { getBlockGotoMeta } from "./labels.ts";
+// @ts-expect-error - Local generated JavaScript file without type definitions
+import { parser } from "./parse-lua.js";
 import { LuaRuntimeError, LuaStackFrame } from "./runtime.ts";
 
 const luaStyleTags = styleTags({

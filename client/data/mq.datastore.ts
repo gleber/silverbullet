@@ -133,7 +133,10 @@ export class DataStoreMQ {
       void this.ensureQueueInitialized(queue);
       return 0;
     }
-    return (this.queuedCounts.get(queue) || 0) + (this.processingCounts.get(queue) || 0);
+    return (
+      (this.queuedCounts.get(queue) || 0) +
+      (this.processingCounts.get(queue) || 0)
+    );
   }
 
   private ensureQueueInitialized(queue: string): Promise<void> {

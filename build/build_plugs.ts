@@ -1,9 +1,9 @@
-import { join } from "node:path";
+import { spawn } from "node:child_process";
 import { mkdirSync } from "node:fs";
 import { cp, writeFile } from "node:fs/promises";
-import { parseArgs } from "node:util";
+import { join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { spawn } from "node:child_process";
+import { parseArgs } from "node:util";
 import * as esbuild from "esbuild";
 
 import { compileManifests } from "../client/plugos/plug_compile.ts";

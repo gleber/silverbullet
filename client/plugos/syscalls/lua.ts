@@ -1,4 +1,5 @@
-import type { SysCallMapping } from "../system.ts";
+import type { ClientSystem } from "../../client_system.ts";
+import type { LuaBlock, LuaExpression } from "../../space_lua/ast.ts";
 import { evalExpression } from "../../space_lua/eval.ts";
 import { parse, parseExpressionString } from "../../space_lua/parse.ts";
 import {
@@ -7,9 +8,8 @@ import {
   luaValueToJS,
 } from "../../space_lua/runtime.ts";
 import { buildThreadLocalEnv } from "../../space_lua_api.ts";
+import type { SysCallMapping } from "../system.ts";
 import { isSendable } from "../util.ts";
-import type { LuaBlock, LuaExpression } from "../../space_lua/ast.ts";
-import type { ClientSystem } from "../../client_system.ts";
 
 export function luaSyscalls(clientSystem: ClientSystem): SysCallMapping {
   return {

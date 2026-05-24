@@ -1,6 +1,6 @@
-import Fuse from "fuse.js";
-import type { FilterOption } from "@silverbulletmd/silverbullet/type/client";
 import { fileName } from "@silverbulletmd/silverbullet/lib/resolve";
+import type { FilterOption } from "@silverbulletmd/silverbullet/type/client";
+import Fuse from "fuse.js";
 
 type FuseOption = FilterOption & {
   baseName: string;

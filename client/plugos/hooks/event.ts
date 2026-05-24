@@ -1,8 +1,8 @@
-import type { Manifest } from "../types.ts";
-import type { System } from "../system.ts";
-import type { EventHookI } from "../eventhook.ts";
 import type { EventHookT } from "@silverbulletmd/silverbullet/type/manifest";
 import type { Config } from "../../config.ts";
+import type { EventHookI } from "../eventhook.ts";
+import type { System } from "../system.ts";
+import type { Manifest } from "../types.ts";
 
 // System events:
 // - plug:load (plugName: string)

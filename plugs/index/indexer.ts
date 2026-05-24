@@ -1,22 +1,22 @@
+import type { ParseTree } from "@silverbulletmd/silverbullet/lib/tree";
+import { index, markdown } from "@silverbulletmd/silverbullet/syscalls";
+import type { IndexTreeEvent } from "@silverbulletmd/silverbullet/type/event";
 import type {
   ObjectValue,
   PageMeta,
 } from "@silverbulletmd/silverbullet/type/index";
-import { extractFrontMatter, type FrontMatter } from "./frontmatter.ts";
-import type { ParseTree } from "@silverbulletmd/silverbullet/lib/tree";
-import type { IndexTreeEvent } from "@silverbulletmd/silverbullet/type/event";
-import { indexPage as pageIndexPage } from "./page.ts";
+import { isValidAnchorName } from "./anchor.ts";
 import { indexData } from "./data.ts";
-import { indexItems } from "./item.ts";
+import { extractFrontMatter, type FrontMatter } from "./frontmatter.ts";
 import { indexHeaders } from "./header.ts";
+import { indexItems } from "./item.ts";
+import { indexPage as pageIndexPage } from "./page.ts";
 import { indexParagraphs } from "./paragraph.ts";
 import { indexRelations } from "./relation.ts";
-import { indexTables } from "./table.ts";
 import { indexSpaceLua } from "./space_lua.ts";
 import { indexSpaceStyle } from "./space_style.ts";
+import { indexTables } from "./table.ts";
 import { indexTags } from "./tags.ts";
-import { index, markdown } from "@silverbulletmd/silverbullet/syscalls";
-import { isValidAnchorName } from "./anchor.ts";
 
 export type IndexerFunction = (
   pageMeta: PageMeta,
@@ -109,8 +109,5 @@ export async function indexPage({ name, tree, meta, text }: IndexTreeEvent) {
   const indexResults = await Promise.all(
     allIndexers.map((indexer) => indexer(meta, frontmatter, tree, text)),
   );
-  await index.indexObjects<any>(
-    name,
-    appendAnchorRecords(indexResults.flat()),
-  );
+  await index.indexObjects<any>(name, appendAnchorRecords(indexResults.flat()));
 }

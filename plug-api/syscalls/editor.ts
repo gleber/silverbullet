@@ -1,11 +1,11 @@
-import { syscall } from "../syscall.ts";
 import type {
   FilterOption,
   NotificationType,
   UploadFile,
 } from "../../plug-api/types/client.ts";
-import type { Path, Ref } from "../lib/ref.ts";
 import type { PageMeta } from "../../plug-api/types/index.ts";
+import type { Path, Ref } from "../lib/ref.ts";
+import { syscall } from "../syscall.ts";
 
 /**
  * Exposes various editor utilities.

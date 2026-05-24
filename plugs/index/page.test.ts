@@ -1,9 +1,9 @@
+import type { PageMeta } from "@silverbulletmd/silverbullet/type/index";
 import { expect, test } from "vitest";
 import { parseMarkdown } from "../../client/markdown_parser/parser.ts";
 import { createMockSystem } from "../../plug-api/system_mock.ts";
-import type { PageMeta } from "@silverbulletmd/silverbullet/type/index";
-import { indexPage } from "./page.ts";
 import { extractFrontMatter } from "./frontmatter.ts";
+import { indexPage } from "./page.ts";
 
 const testPage = `
 ---

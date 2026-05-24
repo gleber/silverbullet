@@ -1,7 +1,7 @@
 import { createContext } from "preact";
 import { useContext } from "preact/hooks";
-import type { ConfigurationViewModel } from "./types.ts";
 import type { SchemaIndex } from "./schema.ts";
+import type { ConfigurationViewModel } from "./types.ts";
 
 export type CfgValue = {
   cfg: ConfigurationViewModel;

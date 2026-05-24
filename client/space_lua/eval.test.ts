@@ -1,4 +1,7 @@
 import { expect, test } from "vitest";
+import type { LuaBlock, LuaFunctionCallStatement } from "./ast.ts";
+import { evalExpression, evalStatement } from "./eval.ts";
+import { parse } from "./parse.ts";
 import {
   LuaEnv,
   LuaNativeJSFunction,
@@ -7,9 +10,6 @@ import {
   luaValueToJS,
   singleResult,
 } from "./runtime.ts";
-import { parse } from "./parse.ts";
-import type { LuaBlock, LuaFunctionCallStatement } from "./ast.ts";
-import { evalExpression, evalStatement } from "./eval.ts";
 import { luaBuildStandardEnv } from "./stdlib.ts";
 
 const sf = LuaStackFrame.lostFrame;

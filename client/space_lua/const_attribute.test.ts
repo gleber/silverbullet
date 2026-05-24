@@ -1,6 +1,6 @@
 import { expect, test } from "vitest";
-import { parse } from "./parse.ts";
 import { evalStatement } from "./eval.ts";
+import { parse } from "./parse.ts";
 import { LuaEnv, LuaRuntimeError, LuaStackFrame } from "./runtime.ts";
 import { luaBuildStandardEnv } from "./stdlib.ts";
 

@@ -1,27 +1,25 @@
 import {
-  editor,
-  index,
-  lua,
-  markdown,
-} from "@silverbulletmd/silverbullet/syscalls";
-
-import type { FrontMatter } from "./frontmatter.ts";
-import {
   findNodeOfType,
   type ParseTree,
   renderToText,
   traverseTreeAsync,
 } from "@silverbulletmd/silverbullet/lib/tree";
-import { updateITags } from "./tags.ts";
-import { isValidAnchorName } from "./anchor.ts";
-import type { AspiringPageObject } from "./relation.ts";
+import {
+  editor,
+  index,
+  lua,
+  markdown,
+} from "@silverbulletmd/silverbullet/syscalls";
+import type { LintDiagnostic } from "@silverbulletmd/silverbullet/type/client";
 import type {
   ObjectValue,
   PageMeta,
 } from "@silverbulletmd/silverbullet/type/index";
-import type { LintDiagnostic } from "@silverbulletmd/silverbullet/type/client";
-
 import YAML from "js-yaml";
+import { isValidAnchorName } from "./anchor.ts";
+import type { FrontMatter } from "./frontmatter.ts";
+import type { AspiringPageObject } from "./relation.ts";
+import { updateITags } from "./tags.ts";
 
 export async function indexPage(
   pageMeta: PageMeta,

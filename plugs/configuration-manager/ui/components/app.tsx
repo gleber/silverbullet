@@ -3,16 +3,16 @@ import { X } from "preact-feather";
 import * as editor from "../../../../plug-api/syscalls/editor.ts";
 import { useCfg } from "../cfg_context.tsx";
 import { EditorsContext } from "../editors_context.tsx";
+import type { TabId } from "../types.ts";
 import { useConfigEditor } from "../use_config_editor.ts";
-import { useShortcutEditor } from "../use_shortcut_editor.ts";
+import { useGlobalEscape } from "../use_global_escape.ts";
 import { useLibrariesEditor } from "../use_libraries_editor.ts";
 import { useSave } from "../use_save.ts";
-import { useGlobalEscape } from "../use_global_escape.ts";
-import { ConfigurationTab } from "./configuration_tab.tsx";
-import { ShortcutsTab } from "./shortcuts_tab.tsx";
-import { LibrariesTab } from "./libraries_tab.tsx";
+import { useShortcutEditor } from "../use_shortcut_editor.ts";
 import { cls } from "./chord_display.tsx";
-import type { TabId } from "../types.ts";
+import { ConfigurationTab } from "./configuration_tab.tsx";
+import { LibrariesTab } from "./libraries_tab.tsx";
+import { ShortcutsTab } from "./shortcuts_tab.tsx";
 
 const TABS: { id: TabId; label: string }[] = [
   { id: "configuration", label: "Configuration" },
@@ -135,10 +135,12 @@ export function App() {
   const config = useConfigEditor();
   const shortcuts = useShortcutEditor();
   const libraries = useLibrariesEditor(cfg.libraries);
-  const { save, saving, error: saveError, dismissError } = useSave(
-    config,
-    shortcuts,
-  );
+  const {
+    save,
+    saving,
+    error: saveError,
+    dismissError,
+  } = useSave(config, shortcuts);
   const [tab, setTab] = useState<TabId>(cfg.initialTab);
 
   useGlobalEscape(useCallback(() => close(), []));

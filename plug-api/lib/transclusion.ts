@@ -1,11 +1,11 @@
 import {
-  mdLinkRegex,
-  wikiLinkRegex,
-} from "../../client/markdown_parser/constants.ts";
-import {
   getNameFromPath,
   parseToRef,
 } from "@silverbulletmd/silverbullet/lib/ref";
+import {
+  mdLinkRegex,
+  wikiLinkRegex,
+} from "../../client/markdown_parser/constants.ts";
 
 export type LinkType = "wikilink" | "markdownlink";
 /**

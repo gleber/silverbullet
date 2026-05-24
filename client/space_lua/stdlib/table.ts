@@ -1,22 +1,22 @@
+import { isTaggedFloat } from "../numeric.ts";
 import {
   getMetatable,
   type ILuaFunction,
   LuaBuiltinFunction,
-  luaCall,
   type LuaEnv,
+  LuaMultiRes,
+  LuaRuntimeError,
+  LuaTable,
+  type LuaValue,
+  luaCall,
   luaEquals,
   luaFormatNumber,
   luaGet,
-  LuaMultiRes,
-  LuaRuntimeError,
   luaSet,
-  LuaTable,
-  type LuaValue,
   luaValueToJS,
   singleResult,
 } from "../runtime.ts";
 import { asyncQuickSort, evalPromiseValues } from "../util.ts";
-import { isTaggedFloat } from "../numeric.ts";
 
 // For `LuaTable` honor `__len` when present; otherwise use raw array
 // length.  For JS arrays use `.length`.

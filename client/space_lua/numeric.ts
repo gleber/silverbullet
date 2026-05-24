@@ -1,6 +1,6 @@
 import type { NumericType } from "./ast.ts";
-import { luaToNumberDetailed } from "./tonumber.ts";
 import { luaTypeName } from "./runtime.ts";
+import { luaToNumberDetailed } from "./tonumber.ts";
 
 export interface LuaTaggedFloat {
   readonly value: number;

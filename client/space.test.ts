@@ -1,14 +1,14 @@
-import { describe, expect, test } from "vitest";
 import { sleep } from "@silverbulletmd/silverbullet/lib/async";
+import { parseToRef } from "@silverbulletmd/silverbullet/lib/ref";
+import type { PageMeta } from "@silverbulletmd/silverbullet/type/index";
+import { describe, expect, test } from "vitest";
+import { createMockSystem } from "../plug-api/system_mock.ts";
+import { resolveAnchor } from "../plugs/index/api.ts";
+import { indexMarkdown } from "../plugs/index/indexer.ts";
 import { MemoryKvPrimitives } from "./data/memory_kv_primitives.ts";
 import { EventHook } from "./plugos/hooks/event.ts";
 import { Space } from "./space.ts";
 import { DataStoreSpacePrimitives } from "./spaces/datastore_space_primitives.ts";
-import { parseToRef } from "@silverbulletmd/silverbullet/lib/ref";
-import { createMockSystem } from "../plug-api/system_mock.ts";
-import { indexMarkdown } from "../plugs/index/indexer.ts";
-import { resolveAnchor } from "../plugs/index/api.ts";
-import type { PageMeta } from "@silverbulletmd/silverbullet/type/index";
 
 const testPage = `
 Some paragraph

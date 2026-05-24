@@ -1,3 +1,4 @@
+import { tags as t } from "@lezer/highlight";
 import type {
   BlockContext,
   Element,
@@ -6,7 +7,6 @@ import type {
   Line,
   MarkdownConfig,
 } from "@lezer/markdown";
-import { tags as t } from "@lezer/highlight";
 
 function parseRow(
   cx: BlockContext,

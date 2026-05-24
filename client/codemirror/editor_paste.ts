@@ -1,22 +1,21 @@
 import { syntaxTree } from "@codemirror/language";
 import { EditorView, ViewPlugin, type ViewUpdate } from "@codemirror/view";
-import type { Client } from "../client.ts";
-
-import { lezerToParseTree } from "../markdown_parser/parse_tree.ts";
+// @ts-expect-error - No type definitions available for this package
+import { tables, taskListItems } from "@joplin/turndown-plugin-gfm";
+import { maximumDocumentSize } from "@silverbulletmd/silverbullet/constants";
+import { safeRun } from "@silverbulletmd/silverbullet/lib/async";
+import { localDateString } from "@silverbulletmd/silverbullet/lib/dates";
+import { isValidName, isValidPath } from "@silverbulletmd/silverbullet/lib/ref";
+import { resolveMarkdownLink } from "@silverbulletmd/silverbullet/lib/resolve";
 import {
   addParentPointers,
   findParentMatching,
   nodeAtPos,
 } from "@silverbulletmd/silverbullet/lib/tree";
-import { maximumDocumentSize } from "@silverbulletmd/silverbullet/constants";
-import { safeRun } from "@silverbulletmd/silverbullet/lib/async";
-import { resolveMarkdownLink } from "@silverbulletmd/silverbullet/lib/resolve";
-import { localDateString } from "@silverbulletmd/silverbullet/lib/dates";
 import type { UploadFile } from "@silverbulletmd/silverbullet/type/client";
-import { isValidName, isValidPath } from "@silverbulletmd/silverbullet/lib/ref";
 import TurndownService from "turndown";
-// @ts-expect-error - No type definitions available for this package
-import { tables, taskListItems } from "@joplin/turndown-plugin-gfm";
+import type { Client } from "../client.ts";
+import { lezerToParseTree } from "../markdown_parser/parse_tree.ts";
 
 const turndownService = new TurndownService({
   hr: "---",

@@ -1,10 +1,15 @@
 import { folderName } from "@silverbulletmd/silverbullet/lib/resolve";
-import { editor, index, language, lua } from "@silverbulletmd/silverbullet/syscalls";
+import {
+  editor,
+  index,
+  language,
+  lua,
+} from "@silverbulletmd/silverbullet/syscalls";
+import type { CompleteEvent } from "@silverbulletmd/silverbullet/type/client";
 import type {
   DocumentMeta,
   PageMeta,
 } from "@silverbulletmd/silverbullet/type/index";
-import type { CompleteEvent } from "@silverbulletmd/silverbullet/type/client";
 
 // Page completion
 export async function pageComplete(completeEvent: CompleteEvent) {

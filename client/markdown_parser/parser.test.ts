@@ -1,13 +1,13 @@
-import { expect, test } from "vitest";
 import {
   collectNodesOfType,
   findNodeOfType,
   renderToText,
 } from "@silverbulletmd/silverbullet/lib/tree";
-import { parseMarkdown } from "./parser.ts";
+import { expect, test } from "vitest";
 import { extractHashtag } from "../../plug-api/lib/tags.ts";
 import { renderHashtag } from "../../plugs/index/tags.ts";
 import { mdLinkRegex } from "./constants.ts";
+import { parseMarkdown } from "./parser.ts";
 
 const sample1 = `---
 type: page
@@ -355,8 +355,9 @@ Bare $ alone is not an anchor.
 A $100 dollar bill (digit-leading is not an anchor).
 `,
   );
-  const anchors = collectNodesOfType(tree, "NamedAnchor")
-    .map((n) => renderToText(n));
+  const anchors = collectNodesOfType(tree, "NamedAnchor").map((n) =>
+    renderToText(n),
+  );
   expect(anchors).toEqual(["$toc1", "$tasks/7", "$work-1", "$sec1"]);
 });
 

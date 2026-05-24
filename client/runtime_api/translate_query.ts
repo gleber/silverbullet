@@ -1,9 +1,9 @@
+import type { LuaExpression } from "../space_lua/ast.ts";
 import { parseExpressionString } from "../space_lua/parse.ts";
 import type {
   LuaCollectionQuery,
   LuaOrderBy,
 } from "../space_lua/query_collection.ts";
-import type { LuaExpression } from "../space_lua/ast.ts";
 
 export type FilterOp =
   | "eq"

@@ -1,13 +1,13 @@
-import { editor, space, system } from "@silverbulletmd/silverbullet/syscalls";
 import {
   defaultLinkStyle,
   maximumDocumentSize,
 } from "@silverbulletmd/silverbullet/constants";
-import { resolveMarkdownLink } from "@silverbulletmd/silverbullet/lib/resolve";
 import {
   encodePageURI,
   isValidPath,
 } from "@silverbulletmd/silverbullet/lib/ref";
+import { resolveMarkdownLink } from "@silverbulletmd/silverbullet/lib/resolve";
+import { editor, space, system } from "@silverbulletmd/silverbullet/syscalls";
 import type { UploadFile } from "@silverbulletmd/silverbullet/type/client";
 
 function ensureValidFilenameWithExtension(filename: string): string {

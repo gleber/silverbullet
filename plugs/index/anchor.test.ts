@@ -1,11 +1,7 @@
+import { renderToText } from "@silverbulletmd/silverbullet/lib/tree";
 import { describe, expect, test } from "vitest";
 import { parseMarkdown } from "../../client/markdown_parser/parser.ts";
-import {
-  cleanAnchor,
-  collectAnchor,
-  isValidAnchorName,
-} from "./anchor.ts";
-import { renderToText } from "@silverbulletmd/silverbullet/lib/tree";
+import { cleanAnchor, collectAnchor, isValidAnchorName } from "./anchor.ts";
 
 describe("anchor helpers", () => {
   test("collectAnchor returns null when no anchor", () => {

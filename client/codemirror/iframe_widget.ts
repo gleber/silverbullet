@@ -1,10 +1,10 @@
 import { WidgetType } from "@codemirror/view";
-import type { Client } from "../client.ts";
-import { createWidgetSandboxIFrame } from "../components/widget_sandbox_iframe.ts";
 import type {
   CodeWidgetCallback,
   CodeWidgetContent,
 } from "@silverbulletmd/silverbullet/type/client";
+import type { Client } from "../client.ts";
+import { createWidgetSandboxIFrame } from "../components/widget_sandbox_iframe.ts";
 
 export class IFrameWidget extends WidgetType {
   iframe?: HTMLIFrameElement;
@@ -17,11 +17,13 @@ export class IFrameWidget extends WidgetType {
     super();
     // Eagerly kick off the callback so the result is in flight before
     // CodeMirror mounts the widget. Idempotent on bodyText.
-    this.client.widgetCache.prewarmResult(this.bodyText, () =>
-      this.codeWidgetCallback(this.bodyText, this.client.currentName()),
-    ).catch(() => {
-      // renderContent / iframe message handler will surface errors.
-    });
+    this.client.widgetCache
+      .prewarmResult(this.bodyText, () =>
+        this.codeWidgetCallback(this.bodyText, this.client.currentName()),
+      )
+      .catch(() => {
+        // renderContent / iframe message handler will surface errors.
+      });
   }
 
   override get estimatedHeight(): number {

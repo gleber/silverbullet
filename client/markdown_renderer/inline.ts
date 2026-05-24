@@ -1,12 +1,4 @@
 import {
-  addParentPointers,
-  findNodeOfType,
-  type ParseTree,
-  renderToText,
-  replaceNodesMatchingAsync,
-} from "@silverbulletmd/silverbullet/lib/tree";
-import { htmlEscape } from "./html_render.ts";
-import {
   getPathExtension,
   isMarkdownPath,
   parseToRef,
@@ -15,24 +7,31 @@ import {
   isLocalURL,
   resolveMarkdownLink,
 } from "@silverbulletmd/silverbullet/lib/resolve";
-import mime from "mime";
-import { LuaStackFrame, LuaTable } from "../space_lua/runtime.ts";
-import { buildExtendedMarkdownLanguage } from "../markdown_parser/parser.ts";
-import type { CustomSyntaxSpec } from "../markdown_parser/custom_syntax.ts";
-import { parse } from "../markdown_parser/parse_tree.ts";
-import { renderResultToMarkdown } from "../space_lua/render_lua_markdown.ts";
-import { parseExpressionString } from "../space_lua/parse.ts";
-import { evalExpression } from "../space_lua/eval.ts";
-import type { LuaExpression } from "../space_lua/ast.ts";
-
-import { fsEndpoint } from "../spaces/constants.ts";
 import {
   nameFromTransclusion,
   parseTransclusion,
   type Transclusion,
 } from "@silverbulletmd/silverbullet/lib/transclusion";
+import {
+  addParentPointers,
+  findNodeOfType,
+  type ParseTree,
+  renderToText,
+  replaceNodesMatchingAsync,
+} from "@silverbulletmd/silverbullet/lib/tree";
+import mime from "mime";
+import type { CustomSyntaxSpec } from "../markdown_parser/custom_syntax.ts";
+import { parse } from "../markdown_parser/parse_tree.ts";
+import { buildExtendedMarkdownLanguage } from "../markdown_parser/parser.ts";
 import type { Space } from "../space.ts";
+import type { LuaExpression } from "../space_lua/ast.ts";
+import { evalExpression } from "../space_lua/eval.ts";
+import { parseExpressionString } from "../space_lua/parse.ts";
+import { renderResultToMarkdown } from "../space_lua/render_lua_markdown.ts";
+import { LuaStackFrame, LuaTable } from "../space_lua/runtime.ts";
 import type { SpaceLuaEnvironment } from "../space_lua.ts";
+import { fsEndpoint } from "../spaces/constants.ts";
+import { htmlEscape } from "./html_render.ts";
 
 // Synthetic node type used to represent pre-resolved custom syntax HTML in the parse tree
 export const CustomSyntaxRenderedHtmlType = "CustomSyntaxRenderedHtml";
@@ -83,7 +82,10 @@ export async function expandMarkdown(
       }
 
       // Resolve local URLs (only for markdown links, wikilinks are absolute)
-      if (isLocalURL(transclusion.url) && transclusion.linktype !== "wikilink") {
+      if (
+        isLocalURL(transclusion.url) &&
+        transclusion.linktype !== "wikilink"
+      ) {
         transclusion.url = resolveMarkdownLink(
           pageName,
           decodeURI(transclusion.url),
@@ -203,7 +205,11 @@ export async function expandMarkdown(
         console.error(`Error in ${spec.name} renderHtml:`, e);
         return {
           type: CustomSyntaxRenderedHtmlType,
-          children: [{ text: `<span class="error">Error in ${htmlEscape(spec.name)} renderHtml: ${htmlEscape(e.message)}</span>` }],
+          children: [
+            {
+              text: `<span class="error">Error in ${htmlEscape(spec.name)} renderHtml: ${htmlEscape(e.message)}</span>`,
+            },
+          ],
         };
       }
     }

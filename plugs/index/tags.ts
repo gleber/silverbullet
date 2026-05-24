@@ -1,4 +1,4 @@
-import type { FrontMatter } from "./frontmatter.ts";
+import { extractHashtag } from "@silverbulletmd/silverbullet/lib/tags";
 import {
   collectNodesOfType,
   findParentMatching,
@@ -6,14 +6,14 @@ import {
   replaceNodesMatching,
   traverseTree,
 } from "@silverbulletmd/silverbullet/lib/tree";
+import { index } from "@silverbulletmd/silverbullet/syscalls";
+import type { CompleteEvent } from "@silverbulletmd/silverbullet/type/client";
 import type {
   ObjectValue,
   PageMeta,
 } from "@silverbulletmd/silverbullet/type/index";
-import type { CompleteEvent } from "@silverbulletmd/silverbullet/type/client";
 import { tagRegex } from "../../client/markdown_parser/constants.ts";
-import { extractHashtag } from "@silverbulletmd/silverbullet/lib/tags";
-import { index } from "@silverbulletmd/silverbullet/syscalls";
+import type { FrontMatter } from "./frontmatter.ts";
 
 export type TagObject = ObjectValue<{
   name: string;
@@ -96,7 +96,7 @@ export async function tagComplete(completeEvent: CompleteEvent) {
 export async function frontmatterTagComplete(completeEvent: CompleteEvent) {
   // Only trigger inside frontmatter
   const frontmatterNode = completeEvent.parentNodes.find((n) =>
-    n.startsWith("FrontMatter:")
+    n.startsWith("FrontMatter:"),
   );
   if (!frontmatterNode) {
     return null;
@@ -106,16 +106,19 @@ export async function frontmatterTagComplete(completeEvent: CompleteEvent) {
 
   // Determine if the cursor line is within a tags section
   // Pattern 1: tags: value or tags: [v1, v2, partial (comma or space separated)
-  const tagsLineMatch = /tags:\s+\[?(?:.*[,\s]\s*)?([^\s!@$%^&*(),.?":{}|<>\\[\]]*)$/.exec(
-    completeEvent.linePrefix,
-  );
+  const tagsLineMatch =
+    /tags:\s+\[?(?:.*[,\s]\s*)?([^\s!@$%^&*(),.?":{}|<>\\[\]]*)$/.exec(
+      completeEvent.linePrefix,
+    );
 
   let prefix = "";
   if (tagsLineMatch) {
     prefix = tagsLineMatch[1];
   } else {
     // Pattern 2: list item under a tags: key (e.g. "  - partial")
-    const listItemMatch = /^\s+-\s+([^\s!@$%^&*(),.?":{}|<>\\[\]]*)$/.exec(completeEvent.linePrefix);
+    const listItemMatch = /^\s+-\s+([^\s!@$%^&*(),.?":{}|<>\\[\]]*)$/.exec(
+      completeEvent.linePrefix,
+    );
     if (!listItemMatch) {
       return null;
     }
@@ -185,16 +188,20 @@ export function renderHashtag(name: string): string {
  */
 export function collectTags(n: ParseTree): string[] {
   const tags = new Set<string>();
-  traverseTree(n, (n) => {
-    if (n.type === "Hashtag") {
-      tags.add(extractHashtag(n.children![0].text!));
-      return true;
-    } else if (n.type === "OrderedList" || n.type === "BulletList") {
-      // Don't traverse into sub-lists
-      return true;
-    }
-    return false;
-  }, true);
+  traverseTree(
+    n,
+    (n) => {
+      if (n.type === "Hashtag") {
+        tags.add(extractHashtag(n.children![0].text!));
+        return true;
+      } else if (n.type === "OrderedList" || n.type === "BulletList") {
+        // Don't traverse into sub-lists
+        return true;
+      }
+      return false;
+    },
+    true,
+  );
   return [...tags];
 }
 

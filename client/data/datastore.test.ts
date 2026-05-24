@@ -1,11 +1,11 @@
 import { expect, test } from "vitest";
 import "fake-indexeddb/auto";
-import { IndexedDBKvPrimitives } from "./indexeddb_kv_primitives.ts";
-import { MemoryKvPrimitives } from "./memory_kv_primitives.ts";
-import type { KvPrimitives } from "./kv_primitives.ts";
-import { DataStore } from "./datastore.ts";
-import { LuaEnv, LuaStackFrame } from "../space_lua/runtime.ts";
 import { parseExpressionString } from "../space_lua/parse.ts";
+import { LuaEnv, LuaStackFrame } from "../space_lua/runtime.ts";
+import { DataStore } from "./datastore.ts";
+import { IndexedDBKvPrimitives } from "./indexeddb_kv_primitives.ts";
+import type { KvPrimitives } from "./kv_primitives.ts";
+import { MemoryKvPrimitives } from "./memory_kv_primitives.ts";
 
 async function runDataStoreTest(db: KvPrimitives) {
   const datastore = new DataStore(db);

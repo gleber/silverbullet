@@ -1,16 +1,15 @@
-import type { EditorState, Range } from "@codemirror/state";
 import { syntaxTree } from "@codemirror/language";
+import type { EditorState, Range } from "@codemirror/state";
 import { Decoration } from "@codemirror/view";
 import {
-  decoratorStateField,
-  hideBlockSource,
-  isCursorInRange,
-  widgetRenderMode,
-} from "./util.ts";
+  encodeRef,
+  getNameFromPath,
+} from "@silverbulletmd/silverbullet/lib/ref";
 import type { Client } from "../client.ts";
-import { parse as parseLua } from "../space_lua/parse.ts";
 import type { LuaBlock, LuaFunctionCallStatement } from "../space_lua/ast.ts";
 import { evalExpression } from "../space_lua/eval.ts";
+import { isTaggedFloat } from "../space_lua/numeric.ts";
+import { parse as parseLua } from "../space_lua/parse.ts";
 import {
   LuaEnv,
   LuaRuntimeError,
@@ -19,14 +18,15 @@ import {
   luaValueToJS,
   singleResult,
 } from "../space_lua/runtime.ts";
-import { isTaggedFloat } from "../space_lua/numeric.ts";
-import {
-  encodeRef,
-  getNameFromPath,
-} from "@silverbulletmd/silverbullet/lib/ref";
 import { resolveASTReference } from "../space_lua.ts";
-import { LuaWidget } from "./lua_widget.ts";
 import { LoadingWidget } from "./loading_widget.ts";
+import { LuaWidget } from "./lua_widget.ts";
+import {
+  decoratorStateField,
+  hideBlockSource,
+  isCursorInRange,
+  widgetRenderMode,
+} from "./util.ts";
 
 export function luaDirectivePlugin(client: Client) {
   return decoratorStateField((state: EditorState) => {

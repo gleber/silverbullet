@@ -1,5 +1,5 @@
-import type { SysCallMapping } from "../system.ts";
 import type { Client } from "../../client.ts";
+import type { SysCallMapping } from "../system.ts";
 
 export function syncSyscalls(client: Client): SysCallMapping {
   const syncTimeoutMs = 30000;

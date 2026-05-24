@@ -1,8 +1,8 @@
+import type { PageMeta } from "@silverbulletmd/silverbullet/type/index";
 import { describe, expect, test } from "vitest";
 import { createMockSystem } from "../../plug-api/system_mock.ts";
-import type { PageMeta } from "@silverbulletmd/silverbullet/type/index";
-import { indexMarkdown } from "./indexer.ts";
 import { resolveAnchor } from "./api.ts";
+import { indexMarkdown } from "./indexer.ts";
 
 const pageMeta = (name: string): PageMeta => ({
   ref: name,

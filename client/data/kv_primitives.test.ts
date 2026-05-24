@@ -1,7 +1,6 @@
 import { expect } from "vitest";
-import type { KvPrimitives } from "./kv_primitives.ts";
-
 import type { KV } from "../../plug-api/types/datastore.ts";
+import type { KvPrimitives } from "./kv_primitives.ts";
 
 export async function allTests(db: KvPrimitives) {
   await db.batchSet([

@@ -1,7 +1,6 @@
+import type { FileMeta } from "../../plug-api/types/index.ts";
 import { base64DecodeDataUrl } from "../lib/crypto.ts";
 import { syscall } from "../syscall.ts";
-
-import type { FileMeta } from "../../plug-api/types/index.ts";
 
 /**
  * Reads an asset embedded in a plug (via the `assets` field in the plug manifest).

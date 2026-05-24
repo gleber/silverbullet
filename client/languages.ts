@@ -1,5 +1,5 @@
-import { yaml as yamlLanguage } from "@codemirror/legacy-modes/mode/yaml";
 import { type Language, StreamLanguage } from "@codemirror/language";
+import { yaml as yamlLanguage } from "@codemirror/legacy-modes/mode/yaml";
 import { luaLanguage } from "./space_lua/parse.ts";
 
 const yamlStreamLanguage = StreamLanguage.define(yamlLanguage);
@@ -49,11 +49,9 @@ export const lazyLanguages: Record<string, () => Promise<Language>> = {
       (await import("@codemirror/legacy-modes/mode/sql")).pgSQL,
     ),
   css: async () => (await import("@codemirror/lang-css")).cssLanguage,
-  "space-style": async () =>
-    (await import("@codemirror/lang-css")).cssLanguage,
+  "space-style": async () => (await import("@codemirror/lang-css")).cssLanguage,
   html: async () => (await import("@codemirror/lang-html")).htmlLanguage,
-  nix: async () =>
-    (await import("@replit/codemirror-lang-nix")).nixLanguage,
+  nix: async () => (await import("@replit/codemirror-lang-nix")).nixLanguage,
   python: async () =>
     StreamLanguage.define(
       (await import("@codemirror/legacy-modes/mode/python")).python,
@@ -71,9 +69,7 @@ export const lazyLanguages: Record<string, () => Promise<Language>> = {
       (await import("@codemirror/legacy-modes/mode/rust")).rust,
     ),
   r: async () =>
-    StreamLanguage.define(
-      (await import("@codemirror/legacy-modes/mode/r")).r,
-    ),
+    StreamLanguage.define((await import("@codemirror/legacy-modes/mode/r")).r),
   shell: async () =>
     StreamLanguage.define(
       (await import("@codemirror/legacy-modes/mode/shell")).shell,
@@ -243,13 +239,14 @@ export const lazyLanguages: Record<string, () => Promise<Language>> = {
 const cache: Record<string, Language> = {};
 
 export function languageFor(name: string): Language | null {
-  return eagerLanguages[name] ?? cache[name] ??
-    (name.startsWith("#") ? yamlStreamLanguage : null);
+  return (
+    eagerLanguages[name] ??
+    cache[name] ??
+    (name.startsWith("#") ? yamlStreamLanguage : null)
+  );
 }
 
-export async function loadLanguageFor(
-  name: string,
-): Promise<Language | null> {
+export async function loadLanguageFor(name: string): Promise<Language | null> {
   const eager = eagerLanguages[name];
   if (eager) return eager;
   if (name.startsWith("#")) return yamlStreamLanguage;
@@ -261,8 +258,5 @@ export async function loadLanguageFor(
 }
 
 export const allLanguageNames = [
-  ...new Set([
-    ...Object.keys(eagerLanguages),
-    ...Object.keys(lazyLanguages),
-  ]),
+  ...new Set([...Object.keys(eagerLanguages), ...Object.keys(lazyLanguages)]),
 ];

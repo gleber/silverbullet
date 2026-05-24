@@ -1,17 +1,20 @@
-import { FilterList } from "./filter.tsx";
+import {
+  getNameFromPath,
+  type Path,
+  parseToRef,
+} from "@silverbulletmd/silverbullet/lib/ref";
+import { folderName } from "@silverbulletmd/silverbullet/lib/resolve";
+import {
+  extractHashtag,
+  isMetaTag,
+} from "@silverbulletmd/silverbullet/lib/tags";
 import type { FilterOption } from "@silverbulletmd/silverbullet/type/client";
-import { tagRegex as mdTagRegex } from "../markdown_parser/constants.ts";
-import { extractHashtag, isMetaTag } from "@silverbulletmd/silverbullet/lib/tags";
 import type {
   DocumentMeta,
   PageMeta,
 } from "@silverbulletmd/silverbullet/type/index";
-import {
-  getNameFromPath,
-  parseToRef,
-  type Path,
-} from "@silverbulletmd/silverbullet/lib/ref";
-import { folderName } from "@silverbulletmd/silverbullet/lib/resolve";
+import { tagRegex as mdTagRegex } from "../markdown_parser/constants.ts";
+import { FilterList } from "./filter.tsx";
 
 const tagRegex = new RegExp(mdTagRegex.source, "g");
 

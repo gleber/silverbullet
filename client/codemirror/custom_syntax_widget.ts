@@ -1,14 +1,14 @@
-import type { EditorState, Range } from "@codemirror/state";
 import { syntaxTree } from "@codemirror/language";
+import type { EditorState, Range } from "@codemirror/state";
 import { Decoration } from "@codemirror/view";
+import type { Client } from "../client.ts";
+import type { CustomSyntaxSpec } from "../markdown_parser/custom_syntax.ts";
+import { LuaWidget, type LuaWidgetContent } from "./lua_widget.ts";
 import {
   decoratorStateField,
   invisibleDecoration,
   isCursorInRange,
 } from "./util.ts";
-import type { Client } from "../client.ts";
-import { LuaWidget, type LuaWidgetContent } from "./lua_widget.ts";
-import type { CustomSyntaxSpec } from "../markdown_parser/custom_syntax.ts";
 
 // Extends the parser spec with editor-specific fields
 export type CustomSyntaxExtension = CustomSyntaxSpec & {

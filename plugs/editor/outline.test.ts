@@ -1,14 +1,14 @@
 import { describe, expect, test } from "vitest";
+import { parseMarkdown } from "../../client/markdown_parser/parser.ts";
 import {
   type CursorContext,
   detectContext,
   indent,
   moveDown,
   moveUp,
-  outdent,
   type OutlineResult,
+  outdent,
 } from "./outline_ops.ts";
-import { parseMarkdown } from "../../client/markdown_parser/parser.ts";
 
 const CURSOR = "|^|";
 

@@ -47,5 +47,6 @@ actionButton = actionButton or {}
 function actionButton.define(spec)
   local actionButtonConfig = config.get("actionButtons", {})
   table.insert(actionButtonConfig, spec)
+  config.set("actionButtons", actionButtonConfig)
 end
 ```

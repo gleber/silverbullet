@@ -1,5 +1,5 @@
-import { LuaBuiltinFunction, LuaTable } from "../runtime.ts";
 import { hashSHA256 } from "../../../plug-api/lib/crypto.ts";
+import { LuaBuiltinFunction, LuaTable } from "../runtime.ts";
 
 export const cryptoApi = new LuaTable({
   sha256: new LuaBuiltinFunction(

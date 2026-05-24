@@ -1,6 +1,6 @@
-import type { SysCallMapping } from "../system.ts";
 import type { Config } from "../../config.ts";
 import { LuaStackFrame, luaValueToJS } from "../../space_lua/runtime.ts";
+import type { SysCallMapping } from "../system.ts";
 import { stripFunctions } from "../util.ts";
 
 export function configSyscalls(config: Config): SysCallMapping {

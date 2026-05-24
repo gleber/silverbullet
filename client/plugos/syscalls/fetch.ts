@@ -1,16 +1,16 @@
-import type { SysCallMapping } from "../system.ts";
+import {
+  base64Decode,
+  base64Encode,
+} from "@silverbulletmd/silverbullet/lib/crypto";
+import type { Client } from "../../client.ts";
+import { fsEndpoint } from "../../spaces/constants.ts";
 import type {
   ProxyFetchRequest,
   ProxyFetchRequest64,
   ProxyFetchResponse,
   ProxyFetchResponse64,
 } from "../proxy_fetch.ts";
-import type { Client } from "../../client.ts";
-import {
-  base64Decode,
-  base64Encode,
-} from "@silverbulletmd/silverbullet/lib/crypto";
-import { fsEndpoint } from "../../spaces/constants.ts";
+import type { SysCallMapping } from "../system.ts";
 
 export function sandboxFetchSyscalls(client: Client): SysCallMapping {
   return {

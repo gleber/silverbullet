@@ -1,40 +1,37 @@
-import { Confirm, Prompt } from "./components/basic_modals.tsx";
-import {
-  CommandPalette,
-  keyboardHint,
-} from "./components/command_palette.tsx";
-import { FilterList } from "./components/filter.tsx";
-import { AnythingPicker } from "./components/anything_picker.tsx";
-import { TopBar } from "./components/top_bar.tsx";
-import reducer from "./reducer.ts";
-import {
-  type Action,
-  type AppViewState,
-  initialViewState,
-} from "./types/ui.ts";
-import * as featherIcons from "preact-feather";
-import * as mdi from "./filtered_material_icons.ts";
-import { h, render as preactRender } from "preact";
-import { useEffect, useReducer } from "preact/hooks";
 import { closeSearchPanel } from "@codemirror/search";
 import { runScopeHandlers } from "@codemirror/view";
-import type { Client } from "./client.ts";
-import { Panel } from "./components/panel.tsx";
 import { safeRun } from "@silverbulletmd/silverbullet/lib/async";
+import {
+  getNameFromPath,
+  getPathExtension,
+  isMarkdownPath,
+  isValidName,
+  type Path,
+  parseToRef,
+} from "@silverbulletmd/silverbullet/lib/ref";
 import type {
   FilterOption,
   NotificationAction,
   NotificationType,
 } from "@silverbulletmd/silverbullet/type/client";
 import { notificationDismissTimeouts } from "@silverbulletmd/silverbullet/type/client";
+import { h, render as preactRender } from "preact";
+import { useEffect, useReducer } from "preact/hooks";
+import * as featherIcons from "preact-feather";
+import type { Client } from "./client.ts";
+import { AnythingPicker } from "./components/anything_picker.tsx";
+import { Confirm, Prompt } from "./components/basic_modals.tsx";
+import { CommandPalette, keyboardHint } from "./components/command_palette.tsx";
+import { FilterList } from "./components/filter.tsx";
+import { Panel } from "./components/panel.tsx";
+import { TopBar } from "./components/top_bar.tsx";
+import * as mdi from "./filtered_material_icons.ts";
+import reducer from "./reducer.ts";
 import {
-  getNameFromPath,
-  getPathExtension,
-  isMarkdownPath,
-  isValidName,
-  parseToRef,
-  type Path,
-} from "@silverbulletmd/silverbullet/lib/ref";
+  type Action,
+  type AppViewState,
+  initialViewState,
+} from "./types/ui.ts";
 
 export class MainUI {
   viewState: AppViewState = initialViewState;
@@ -128,6 +125,13 @@ export class MainUI {
   }
 
   showProgress(progressPercentage?: number, progressType?: "sync" | "index") {
+    if (
+      progressType === "index" &&
+      this.viewState.progressType === "sync" &&
+      this.viewState.progressPercentage !== undefined
+    ) {
+      return;
+    }
     this.viewDispatch({
       type: "set-progress",
       progressPercentage,
@@ -541,12 +545,11 @@ export class MainUI {
           cssClass={(client.currentPageMeta()?.pageDecoration?.cssClasses ?? [])
             .join(" ")
             .replaceAll(/[^a-zA-Z0-9-_ ]/g, "")}
-          mobileMenuStyle={viewState.isMobile
-            ? client.config.get<string>(
-              "mobileMenuStyle",
-              "hamburger",
-            )
-            : undefined}
+          mobileMenuStyle={
+            viewState.isMobile
+              ? client.config.get<string>("mobileMenuStyle", "hamburger")
+              : undefined
+          }
           readOnly={
             viewState.uiOptions.forcedROMode || client.bootConfig.readOnly
           }

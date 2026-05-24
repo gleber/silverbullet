@@ -1,5 +1,5 @@
-import type { NamespaceOperation } from "@silverbulletmd/silverbullet/type/namespace";
 import type { PlugNamespaceHookT } from "@silverbulletmd/silverbullet/type/manifest";
+import type { NamespaceOperation } from "@silverbulletmd/silverbullet/type/namespace";
 import type { Plug } from "../plug.ts";
 import type { System } from "../system.ts";
 import type { Hook, Manifest } from "../types.ts";

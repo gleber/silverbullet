@@ -1,6 +1,6 @@
+import type { Completion } from "@codemirror/autocomplete";
 import { config, index, lua } from "@silverbulletmd/silverbullet/syscalls";
 import type { CompleteEvent } from "@silverbulletmd/silverbullet/type/client";
-import type { Completion } from "@codemirror/autocomplete";
 import type { ObjectValue } from "@silverbulletmd/silverbullet/type/index";
 
 export async function attributeCompletion(
@@ -88,11 +88,7 @@ export async function anchorComplete(completeEvent: CompleteEvent) {
       { p: page },
     );
   } else {
-    anchors = await index.queryLuaObjects<AnchorObject>(
-      "anchor",
-      {},
-      {},
-    );
+    anchors = await index.queryLuaObjects<AnchorObject>("anchor", {}, {});
   }
 
   const filtered = anchors

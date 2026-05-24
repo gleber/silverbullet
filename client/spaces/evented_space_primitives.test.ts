@@ -1,12 +1,12 @@
+import type { FileMeta } from "@silverbulletmd/silverbullet/type/index";
 import type { EventHookT } from "@silverbulletmd/silverbullet/type/manifest";
 import { expect, test } from "vitest";
-import { EventedSpacePrimitives } from "./evented_space_primitives.ts";
-import { EventHook } from "../plugos/hooks/event.ts";
-import { System } from "../plugos/system.ts";
 import { DataStore } from "../data/datastore.ts";
 import { MemoryKvPrimitives } from "../data/memory_kv_primitives.ts";
+import { EventHook } from "../plugos/hooks/event.ts";
+import { System } from "../plugos/system.ts";
+import { EventedSpacePrimitives } from "./evented_space_primitives.ts";
 import type { SpacePrimitives } from "./space_primitives.ts";
-import type { FileMeta } from "@silverbulletmd/silverbullet/type/index";
 
 class MockSpacePrimitives implements SpacePrimitives {
   files = new Map<string, { data: Uint8Array; meta: FileMeta }>();
@@ -79,7 +79,11 @@ test("EventedSpacePrimitives - files:changed batch event dispatching", async () 
   // Call fetchFileList on the empty evented space (it should think all 3 are new)
   await evented.fetchFileList();
 
-  expect(fileChangedEvents.sort()).toEqual(["file1.md", "file2.md", "file3.md"]);
+  expect(fileChangedEvents.sort()).toEqual([
+    "file1.md",
+    "file2.md",
+    "file3.md",
+  ]);
   expect(filesChangedEvents.length).toBe(1);
   expect(filesChangedEvents[0].sort()).toEqual([
     "file1.md",

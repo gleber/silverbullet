@@ -1,14 +1,14 @@
-import { bench, expect } from "vitest";
 import { readFile } from "node:fs/promises";
+import { fileURLToPath } from "node:url";
+import { bench, expect } from "vitest";
+import { evalStatement } from "../client/space_lua/eval.ts";
 import { parse } from "../client/space_lua/parse.ts";
-import { luaBuildStandardEnv } from "../client/space_lua/stdlib.ts";
 import {
   LuaEnv,
   LuaRuntimeError,
   LuaStackFrame,
 } from "../client/space_lua/runtime.ts";
-import { evalStatement } from "../client/space_lua/eval.ts";
-import { fileURLToPath } from "node:url";
+import { luaBuildStandardEnv } from "../client/space_lua/stdlib.ts";
 
 bench("[Lua] Core language", async () => {
   await runLuaTest("../client/space_lua/language_core_test.lua");

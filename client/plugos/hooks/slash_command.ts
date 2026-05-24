@@ -1,19 +1,19 @@
-import type { Hook, Manifest } from "../types.ts";
-import type { System } from "../system.ts";
 import type {
   Completion,
   CompletionContext,
   CompletionResult,
 } from "@codemirror/autocomplete";
-import type { Client } from "../../client.ts";
 import { syntaxTree } from "@codemirror/language";
 import { safeRun, throttle } from "@silverbulletmd/silverbullet/lib/async";
-import type { SlashCommandHookT } from "@silverbulletmd/silverbullet/type/manifest";
-import type { SlashCommand } from "../../types/command.ts";
 import type {
   SlashCompletionOption,
   SlashCompletions,
 } from "@silverbulletmd/silverbullet/type/client";
+import type { SlashCommandHookT } from "@silverbulletmd/silverbullet/type/manifest";
+import type { Client } from "../../client.ts";
+import type { SlashCommand } from "../../types/command.ts";
+import type { System } from "../system.ts";
+import type { Hook, Manifest } from "../types.ts";
 
 const slashCommandRegexp = /([^\w:]|^)\/[\w#-]*/;
 

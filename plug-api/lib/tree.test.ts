@@ -1,4 +1,6 @@
 import { expect, test, vi } from "vitest";
+import { parse } from "../../client/markdown_parser/parse_tree.ts";
+import { extendedMarkdownLanguage } from "../../client/markdown_parser/parser.ts";
 import {
   addParentPointers,
   cleanTree,
@@ -17,8 +19,6 @@ import {
   traverseTree,
   traverseTreeAsync,
 } from "./tree.ts";
-import { parse } from "../../client/markdown_parser/parse_tree.ts";
-import { extendedMarkdownLanguage } from "../../client/markdown_parser/parser.ts";
 
 const mdTest1 = `
 # Heading
@@ -115,15 +115,19 @@ test("traverseTree isolates visitor errors per-node when opted in", () => {
   const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
   try {
     const seenHeadings: string[] = [];
-    traverseTree(mdTree, (n) => {
-      if (n.type === "ATXHeading1") {
-        throw new Error("boom on first heading");
-      }
-      if (n.type === "ATXHeading2") {
-        seenHeadings.push(n.type);
-      }
-      return false;
-    }, true);
+    traverseTree(
+      mdTree,
+      (n) => {
+        if (n.type === "ATXHeading1") {
+          throw new Error("boom on first heading");
+        }
+        if (n.type === "ATXHeading2") {
+          seenHeadings.push(n.type);
+        }
+        return false;
+      },
+      true,
+    );
     expect(seenHeadings).toContain("ATXHeading2");
     expect(errorSpy).toHaveBeenCalled();
   } finally {
@@ -139,7 +143,7 @@ test("traverseTree propagates visitor errors by default", () => {
         throw new Error("boom on first heading");
       }
       return false;
-    })
+    }),
   ).toThrow("boom on first heading");
 });
 
@@ -148,15 +152,19 @@ test("traverseTreeAsync isolates visitor errors per-node when opted in", async (
   const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
   try {
     const seenHeadings: string[] = [];
-    await traverseTreeAsync(mdTree, (n) => {
-      if (n.type === "ATXHeading1") {
-        return Promise.reject(new Error("boom on first heading"));
-      }
-      if (n.type === "ATXHeading2") {
-        seenHeadings.push(n.type);
-      }
-      return Promise.resolve(false);
-    }, true);
+    await traverseTreeAsync(
+      mdTree,
+      (n) => {
+        if (n.type === "ATXHeading1") {
+          return Promise.reject(new Error("boom on first heading"));
+        }
+        if (n.type === "ATXHeading2") {
+          seenHeadings.push(n.type);
+        }
+        return Promise.resolve(false);
+      },
+      true,
+    );
     expect(seenHeadings).toContain("ATXHeading2");
     expect(errorSpy).toHaveBeenCalled();
   } finally {
@@ -204,10 +212,7 @@ test("findNodeOfType finds first node of given type", () => {
 test("findNodeMatching finds first matching node", () => {
   const mdTree = parse(extendedMarkdownLanguage, mdTest1);
 
-  const found = findNodeMatching(
-    mdTree,
-    (n) => n.type === "ATXHeading2",
-  );
+  const found = findNodeMatching(mdTree, (n) => n.type === "ATXHeading2");
   expect(found).not.toBeNull();
   expect(found!.type).toBe("ATXHeading2");
 

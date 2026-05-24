@@ -1,3 +1,5 @@
+import { evalStatement } from "../eval.ts";
+import { parse } from "../parse.ts";
 import {
   LuaBuiltinFunction,
   type LuaEnv,
@@ -5,8 +7,6 @@ import {
   type LuaStackFrame,
   type LuaValue,
 } from "../runtime.ts";
-import { parse } from "../parse.ts";
-import { evalStatement } from "../eval.ts";
 
 // Returns a function (callable chunk) or (nil, "error message") pair.
 export function luaLoad(code: LuaValue, sf: LuaStackFrame): LuaValue {

@@ -1,4 +1,3 @@
-import { useEffect, useRef } from "preact/hooks";
 import { history, historyKeymap, standardKeymap } from "@codemirror/commands";
 import { EditorState } from "@codemirror/state";
 import {
@@ -8,6 +7,7 @@ import {
   ViewPlugin,
   type ViewUpdate,
 } from "@codemirror/view";
+import { useEffect, useRef } from "preact/hooks";
 import { createCommandKeyBindings } from "../codemirror/editor_state.ts";
 
 type MiniEditorEvents = {

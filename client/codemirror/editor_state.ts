@@ -1,10 +1,10 @@
-import customMarkdownStyle from "../style.ts";
-import { history, insertNewlineAndIndent } from "@codemirror/commands";
 import {
   autocompletion,
   closeBrackets,
   closeBracketsKeymap,
 } from "@codemirror/autocomplete";
+import { history, insertNewlineAndIndent } from "@codemirror/commands";
+import { deleteMarkupBackward, markdown } from "@codemirror/lang-markdown";
 import {
   codeFolding,
   foldEffect,
@@ -18,8 +18,8 @@ import {
 import {
   Annotation,
   Compartment,
-  EditorState,
   type EditorSelection,
+  EditorState,
   type Extension,
   Prec,
 } from "@codemirror/state";
@@ -33,27 +33,24 @@ import {
   ViewPlugin,
   type ViewUpdate,
 } from "@codemirror/view";
-import {
-  deleteMarkupBackward,
-  markdown,
-} from "@codemirror/lang-markdown";
-import { customEnterCommand } from "./markdown_enter.ts";
-import type { Client } from "../client.ts";
-import { loadVim } from "../vim_loader.ts";
-import { inlineContentPlugin } from "./inline_content.ts";
-import { cleanModePlugins } from "./clean.ts";
-import { lineWrapper } from "./line_wrapper.ts";
-import { createSmartQuoteKeyBindings } from "./smart_quotes.ts";
-import { documentExtension, pasteLinkExtension } from "./editor_paste.ts";
-import type { TextChange } from "./change.ts";
-import { postScriptPrefacePlugin } from "./top_bottom_panels.ts";
-import { lazyLanguages, languageFor, loadLanguageFor } from "../languages.ts";
-import { plugLinter } from "./lint.ts";
-import { buildExtendedMarkdownLanguage } from "../markdown_parser/parser.ts";
 import { safeRun } from "@silverbulletmd/silverbullet/lib/async";
+import type { ClickEvent } from "@silverbulletmd/silverbullet/type/client";
+import type { Client } from "../client.ts";
 import { codeCopyPlugin } from "../codemirror/code_copy.ts";
 import { disableSpellcheck } from "../codemirror/spell_checking.ts";
-import type { ClickEvent } from "@silverbulletmd/silverbullet/type/client";
+import { languageFor, lazyLanguages, loadLanguageFor } from "../languages.ts";
+import { buildExtendedMarkdownLanguage } from "../markdown_parser/parser.ts";
+import customMarkdownStyle from "../style.ts";
+import { loadVim } from "../vim_loader.ts";
+import type { TextChange } from "./change.ts";
+import { cleanModePlugins } from "./clean.ts";
+import { documentExtension, pasteLinkExtension } from "./editor_paste.ts";
+import { inlineContentPlugin } from "./inline_content.ts";
+import { lineWrapper } from "./line_wrapper.ts";
+import { plugLinter } from "./lint.ts";
+import { customEnterCommand } from "./markdown_enter.ts";
+import { createSmartQuoteKeyBindings } from "./smart_quotes.ts";
+import { postScriptPrefacePlugin } from "./top_bottom_panels.ts";
 
 // Annotation marking a transaction whose changes came from outside the
 // editor's edit stream (e.g. a page re-fetch from storage), so the

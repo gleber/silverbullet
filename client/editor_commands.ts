@@ -1,4 +1,10 @@
 import {
+  acceptCompletion,
+  closeCompletion,
+  moveCompletionSelection,
+  startCompletion,
+} from "@codemirror/autocomplete";
+import {
   cursorCharLeft,
   cursorCharRight,
   cursorDocEnd,
@@ -42,18 +48,12 @@ import {
   transposeChars,
   undo,
 } from "@codemirror/commands";
-import {
-  acceptCompletion,
-  closeCompletion,
-  moveCompletionSelection,
-  startCompletion,
-} from "@codemirror/autocomplete";
 import { openSearchPanel } from "@codemirror/search";
 import { EditorSelection } from "@codemirror/state";
 import type { EditorView } from "@codemirror/view";
+import type { Client } from "./client.ts";
 import { reloadAllWidgets } from "./codemirror/code_widget.ts";
 import { broadcastReload } from "./components/widget_sandbox_iframe.ts";
-import type { Client } from "./client.ts";
 import type { CommandHook } from "./plugos/hooks/command.ts";
 
 /**
@@ -533,7 +533,12 @@ export function registerEditorCommands(
     name: "Navigate: Meta Picker",
     key: "Ctrl-Shift-k",
     mac: "Cmd-Shift-k",
-    menu: { location: "navigate", group: "2_picker", order: 4, label: "Meta Page..." },
+    menu: {
+      location: "navigate",
+      group: "2_picker",
+      order: 4,
+      label: "Meta Page...",
+    },
     run: async () => client.startPageNavigate("meta"),
   });
   hook.registerCommand({
@@ -542,7 +547,12 @@ export function registerEditorCommands(
     mac: "Cmd-o",
     menu: [
       { location: "file", group: "1_new", order: 3, label: "Open Document..." },
-      { location: "navigate", group: "2_picker", order: 2, label: "Document..." },
+      {
+        location: "navigate",
+        group: "2_picker",
+        order: 2,
+        label: "Document...",
+      },
     ],
     run: async () => client.startPageNavigate("document"),
   });

@@ -2,14 +2,15 @@ import type { ComponentProps } from "preact";
 import type { X } from "preact-feather";
 
 type FeatherProps = ComponentProps<typeof X>;
+
+import type { EditorView } from "@codemirror/view";
+import type { FilterOption } from "@silverbulletmd/silverbullet/type/client";
 import type { FunctionalComponent } from "preact";
 import { useEffect, useRef, useState } from "preact/hooks";
-import type { FilterOption } from "@silverbulletmd/silverbullet/type/client";
-import { MiniEditor } from "./mini_editor.tsx";
-import { fuzzySearchAndSort } from "../lib/fuse_search.ts";
 import { deepEqual } from "../../plug-api/lib/json.ts";
+import { fuzzySearchAndSort } from "../lib/fuse_search.ts";
 import { AlwaysShownModal } from "./basic_modals.tsx";
-import type { EditorView } from "@codemirror/view";
+import { MiniEditor } from "./mini_editor.tsx";
 
 export function FilterList({
   placeholder,

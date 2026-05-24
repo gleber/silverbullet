@@ -1,6 +1,6 @@
 import { expect, test } from "vitest";
-import { ttlCache } from "./memory_cache.ts";
 import { sleep } from "./async.ts";
+import { ttlCache } from "./memory_cache.ts";
 
 test("Memory cache", async () => {
   let calls = 0;

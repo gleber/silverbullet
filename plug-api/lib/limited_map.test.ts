@@ -1,6 +1,6 @@
 import { expect, test } from "vitest";
-import { LimitedMap } from "./limited_map.ts";
 import { sleep } from "./async.ts";
+import { LimitedMap } from "./limited_map.ts";
 
 test("limited map", async () => {
   const mp = new LimitedMap<string>(3);

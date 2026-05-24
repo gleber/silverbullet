@@ -1,16 +1,16 @@
 import type { EditorState } from "@codemirror/state";
 import { Decoration } from "@codemirror/view";
-import type { Client } from "../client.ts";
-import {
-  fileName,
-  isBuiltinPath,
-} from "@silverbulletmd/silverbullet/lib/resolve";
 import {
   encodePageURI,
   encodeRef,
   getNameFromPath,
   parseToRef,
 } from "@silverbulletmd/silverbullet/lib/ref";
+import {
+  fileName,
+  isBuiltinPath,
+} from "@silverbulletmd/silverbullet/lib/resolve";
+import type { Client } from "../client.ts";
 import { isCursorInRange, LinkWidget } from "./util.ts";
 
 export interface WikiLinkMatch {

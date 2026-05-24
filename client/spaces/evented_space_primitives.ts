@@ -1,8 +1,7 @@
-import type { EventHook } from "../plugos/hooks/event.ts";
-
-import type { SpacePrimitives } from "./space_primitives.ts";
 import type { FileMeta } from "@silverbulletmd/silverbullet/type/index";
 import type { DataStore } from "../data/datastore.ts";
+import type { EventHook } from "../plugos/hooks/event.ts";
+import type { SpacePrimitives } from "./space_primitives.ts";
 
 /**
  * Events exposed:
@@ -33,7 +32,7 @@ export class EventedSpacePrimitives implements SpacePrimitives {
     private eventHook: EventHook,
     private ds: DataStore,
     private snapshotKey = ["$spaceSnapshot"],
-  ) { }
+  ) {}
 
   async enable() {
     console.log("Loading snapshot and enabling events");
@@ -131,7 +130,7 @@ export class EventedSpacePrimitives implements SpacePrimitives {
           );
           changedFiles.push(meta.name);
           changePromises.push(
-            this.dispatchEvent("file:changed", meta.name, oldHash, newHash)
+            this.dispatchEvent("file:changed", meta.name, oldHash, newHash),
           );
         }
         // Page found, not deleted

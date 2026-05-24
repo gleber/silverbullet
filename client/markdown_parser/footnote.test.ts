@@ -1,9 +1,9 @@
-import { expect, test } from "vitest";
 import {
   collectNodesOfType,
   findNodeOfType,
   renderToText,
 } from "@silverbulletmd/silverbullet/lib/tree";
+import { expect, test } from "vitest";
 import { parseMarkdown } from "./parser.ts";
 
 // Footnote ref tests

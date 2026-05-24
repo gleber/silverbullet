@@ -1,12 +1,12 @@
-import { describe, expect, test } from "vitest";
-import { parseMarkdown } from "../../client/markdown_parser/parser.ts";
-import { createMockSystem } from "../../plug-api/system_mock.ts";
 import type {
   ObjectValue,
   PageMeta,
 } from "@silverbulletmd/silverbullet/type/index";
-import { extractFrontMatter } from "./frontmatter.ts";
+import { describe, expect, test } from "vitest";
+import { parseMarkdown } from "../../client/markdown_parser/parser.ts";
+import { createMockSystem } from "../../plug-api/system_mock.ts";
 import { indexData } from "./data.ts";
+import { extractFrontMatter } from "./frontmatter.ts";
 
 const testPage = `
 Some test

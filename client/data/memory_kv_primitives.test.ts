@@ -1,11 +1,10 @@
-import { expect, onTestFinished, test } from "vitest";
 import { rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { MemoryKvPrimitives } from "./memory_kv_primitives.ts";
-import { allTests } from "./kv_primitives.test.ts";
-
+import { expect, onTestFinished, test } from "vitest";
 import type { KV } from "../../plug-api/types/datastore.ts";
+import { allTests } from "./kv_primitives.test.ts";
+import { MemoryKvPrimitives } from "./memory_kv_primitives.ts";
 
 function tempFilePath(): string {
   const path = join(

@@ -1,5 +1,5 @@
-import { LuaBuiltinFunction, LuaTable } from "../runtime.ts";
 import { base64Decode, base64Encode } from "../../../plug-api/lib/crypto.ts";
+import { LuaBuiltinFunction, LuaTable } from "../runtime.ts";
 
 export const encodingApi = new LuaTable({
   base64Encode: new LuaBuiltinFunction(

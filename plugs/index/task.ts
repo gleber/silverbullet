@@ -1,12 +1,9 @@
 import {
-  config,
-  editor,
-  events,
-  index,
-  markdown,
-  space,
-  sync,
-} from "@silverbulletmd/silverbullet/syscalls";
+  getNameFromPath,
+  getOffsetFromLineColumn,
+  isMarkdownPath,
+  parseToRef,
+} from "@silverbulletmd/silverbullet/lib/ref";
 
 import {
   addParentPointers,
@@ -19,11 +16,14 @@ import {
   renderToText,
 } from "@silverbulletmd/silverbullet/lib/tree";
 import {
-  getNameFromPath,
-  getOffsetFromLineColumn,
-  isMarkdownPath,
-  parseToRef,
-} from "@silverbulletmd/silverbullet/lib/ref";
+  config,
+  editor,
+  events,
+  index,
+  markdown,
+  space,
+  sync,
+} from "@silverbulletmd/silverbullet/syscalls";
 import type { ClickEvent } from "@silverbulletmd/silverbullet/type/client";
 
 export const completeStates = ["x", "X"];
@@ -166,7 +166,9 @@ export async function updateTaskState(
   // edit the task marker.
   if (ref.details?.type === "anchor") {
     const pageFilter = ref.path
-      ? ref.path.endsWith(".md") ? ref.path.slice(0, -3) : ref.path
+      ? ref.path.endsWith(".md")
+        ? ref.path.slice(0, -3)
+        : ref.path
       : undefined;
     const result = await index.resolveAnchor(ref.details.name, pageFilter);
     if (!result.ok) {

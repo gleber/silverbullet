@@ -1,8 +1,6 @@
 import { Command } from "commander";
-
-import { version } from "../version.ts";
-
 import { plugCompileCommand } from "../client/plugos/plug_compile.ts";
+import { version } from "../version.ts";
 
 const program = new Command();
 

@@ -1,11 +1,11 @@
-import { expect, test } from "vitest";
 import {
   collectNodesOfType,
   findNodeOfType,
   renderToText,
 } from "@silverbulletmd/silverbullet/lib/tree";
-import { buildExtendedMarkdownLanguage } from "./parser.ts";
+import { expect, test } from "vitest";
 import { parse } from "./parse_tree.ts";
+import { buildExtendedMarkdownLanguage } from "./parser.ts";
 
 test("Custom inline syntax - basic", () => {
   const lang = buildExtendedMarkdownLanguage({

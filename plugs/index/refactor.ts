@@ -1,16 +1,5 @@
-import {
-  editor,
-  index,
-  lua,
-  markdown,
-  mq,
-  space,
-} from "@silverbulletmd/silverbullet/syscalls";
-import {
-  getTextualBackRelations,
-  type RelationObject,
-} from "./relation.ts";
-import { spliceReference } from "./refactor_splice.ts";
+import { notFoundError } from "@silverbulletmd/silverbullet/constants";
+import { isValidPath } from "@silverbulletmd/silverbullet/lib/ref";
 import {
   absoluteToRelativePath,
   folderName,
@@ -22,8 +11,16 @@ import {
   findParentMatching,
   nodeAtPos,
 } from "@silverbulletmd/silverbullet/lib/tree";
-import { isValidPath } from "@silverbulletmd/silverbullet/lib/ref";
-import { notFoundError } from "@silverbulletmd/silverbullet/constants";
+import {
+  editor,
+  index,
+  lua,
+  markdown,
+  mq,
+  space,
+} from "@silverbulletmd/silverbullet/syscalls";
+import { spliceReference } from "./refactor_splice.ts";
+import { getTextualBackRelations, type RelationObject } from "./relation.ts";
 
 /**
  * Renames a single page.
@@ -238,10 +235,9 @@ async function renamePage(oldName: string, newName: string) {
       if (text.substring(pos, pos + 2) === "[[") continue;
 
       const newLink = absoluteToRelativePath(newName, rel.to);
-      let newTail = text.substring(pos).replace(
-        /^.*?(?=@\d*|#|\$|\))/,
-        newLink,
-      );
+      let newTail = text
+        .substring(pos)
+        .replace(/^.*?(?=@\d*|#|\$|\))/, newLink);
       if (newLink.includes(" ")) {
         newTail = `<${newTail.replace(")", ">)")}`;
       }

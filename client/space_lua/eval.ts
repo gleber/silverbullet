@@ -8,56 +8,6 @@ import type {
   NumericType,
 } from "./ast.ts";
 import { LuaAttribute } from "./ast.ts";
-import { evalPromiseValues } from "./util.ts";
-import {
-  getMetatable,
-  type ILuaFunction,
-  type ILuaGettable,
-  isILuaFunction,
-  jsToLuaValue,
-  luaCall,
-  luaCloseFromMark,
-  luaEnsureCloseStack,
-  LuaEnv,
-  luaEquals,
-  luaFormatNumber,
-  LuaFunction,
-  luaGet,
-  luaIndexValue,
-  type LuaLValueContainer,
-  luaMarkToBeClosed,
-  LuaMultiRes,
-  LuaRuntimeError,
-  luaSet,
-  type LuaStackFrame,
-  LuaTable,
-  luaTruthy,
-  type LuaType,
-  luaTypeName,
-  luaTypeOf,
-  type LuaValue,
-  luaValueToJS,
-  singleResult,
-} from "./runtime.ts";
-import {
-  type LuaCollectionQuery,
-  type LuaGroupByEntry,
-  toCollection,
-} from "./query_collection.ts";
-import {
-  coerceNumericPair,
-  coerceToNumber,
-  inferNumericType,
-  isNegativeZero,
-  isTaggedFloat,
-  luaStringCoercionError,
-  makeLuaFloat,
-  makeLuaZero,
-  normalizeArithmeticResult,
-  toInteger,
-  untagNumber,
-} from "./numeric.ts";
-import { isPromise, rpAll, rpThen } from "./rp.ts";
 import {
   asAssignment,
   asBinary,
@@ -88,6 +38,56 @@ import {
   asWhile,
 } from "./ast_narrow.ts";
 import { getBlockGotoMeta } from "./labels.ts";
+import {
+  coerceNumericPair,
+  coerceToNumber,
+  inferNumericType,
+  isNegativeZero,
+  isTaggedFloat,
+  luaStringCoercionError,
+  makeLuaFloat,
+  makeLuaZero,
+  normalizeArithmeticResult,
+  toInteger,
+  untagNumber,
+} from "./numeric.ts";
+import {
+  type LuaCollectionQuery,
+  type LuaGroupByEntry,
+  toCollection,
+} from "./query_collection.ts";
+import { isPromise, rpAll, rpThen } from "./rp.ts";
+import {
+  getMetatable,
+  type ILuaFunction,
+  type ILuaGettable,
+  isILuaFunction,
+  jsToLuaValue,
+  LuaEnv,
+  LuaFunction,
+  type LuaLValueContainer,
+  LuaMultiRes,
+  LuaRuntimeError,
+  type LuaStackFrame,
+  LuaTable,
+  type LuaType,
+  type LuaValue,
+  luaCall,
+  luaCloseFromMark,
+  luaEnsureCloseStack,
+  luaEquals,
+  luaFormatNumber,
+  luaGet,
+  luaIndexValue,
+  luaMarkToBeClosed,
+  luaSet,
+  luaTruthy,
+  luaTypeName,
+  luaTypeOf,
+  luaValueToJS,
+  singleResult,
+} from "./runtime.ts";
+import { evalPromiseValues } from "./util.ts";
 
 const astNumberKindCache = new WeakMap<LuaExpression, NumericType>();
 

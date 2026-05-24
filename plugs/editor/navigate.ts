@@ -1,10 +1,9 @@
+import { parseToRef } from "@silverbulletmd/silverbullet/lib/ref";
 import {
-  config,
-  editor,
-  index,
-  markdown,
-  space,
-} from "@silverbulletmd/silverbullet/syscalls";
+  isLocalURL,
+  resolveMarkdownLink,
+} from "@silverbulletmd/silverbullet/lib/resolve";
+import { extractHashtag } from "@silverbulletmd/silverbullet/lib/tags";
 import {
   addParentPointers,
   collectNodesOfType,
@@ -14,13 +13,14 @@ import {
   type ParseTree,
 } from "@silverbulletmd/silverbullet/lib/tree";
 import {
-  isLocalURL,
-  resolveMarkdownLink,
-} from "@silverbulletmd/silverbullet/lib/resolve";
-import { parseToRef } from "@silverbulletmd/silverbullet/lib/ref";
-import { tagPrefix } from "../index/constants.ts";
+  config,
+  editor,
+  index,
+  markdown,
+  space,
+} from "@silverbulletmd/silverbullet/syscalls";
 import type { ClickEvent } from "@silverbulletmd/silverbullet/type/client";
-import { extractHashtag } from "@silverbulletmd/silverbullet/lib/tags";
+import { tagPrefix } from "../index/constants.ts";
 
 async function actionClickOrActionEnter(
   mdTree: ParseTree | null,
@@ -64,7 +64,9 @@ async function actionClickOrActionEnter(
       if (ref.details?.type === "anchor") {
         const anchorName = ref.details.name;
         const pageFilter = ref.path
-          ? ref.path.endsWith(".md") ? ref.path.slice(0, -3) : ref.path
+          ? ref.path.endsWith(".md")
+            ? ref.path.slice(0, -3)
+            : ref.path
           : undefined;
         const result = await index.resolveAnchor(anchorName, pageFilter);
         if (!result.ok) {
@@ -75,9 +77,9 @@ async function actionClickOrActionEnter(
             );
           }
           return editor.flashNotification(
-            `Duplicate anchor $${anchorName} on pages: ${
-              result.hits.map((h) => h.page).join(", ")
-            }`,
+            `Duplicate anchor $${anchorName} on pages: ${result.hits
+              .map((h) => h.page)
+              .join(", ")}`,
             "error",
           );
         }
@@ -141,10 +143,7 @@ async function actionClickOrActionEnter(
     }
     case "Hashtag": {
       const hashtag = extractHashtag(mdTree.children![0].text!);
-      const tagPage = await config.get(
-        ["tags", hashtag, "tagPage"],
-        null,
-      );
+      const tagPage = await config.get(["tags", hashtag, "tagPage"], null);
       await editor.navigate(
         tagPage ?? `${tagPrefix}${hashtag}`,
         false,

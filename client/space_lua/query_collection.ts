@@ -1,3 +1,9 @@
+import type { QueryCollationConfig } from "../../plug-api/types/config.ts";
+import type { KvKey } from "../../plug-api/types/datastore.ts";
+import { Config } from "../config.ts";
+import type { DataStore } from "../data/datastore.ts";
+import type { KvPrimitives } from "../data/kv_primitives.ts";
+import { executeAggregate, getAggregateSpec } from "./aggregates.ts";
 import type {
   LuaAggregateCallExpression,
   LuaBinaryExpression,
@@ -11,33 +17,23 @@ import type {
   LuaPropField,
   LuaUnaryExpression,
 } from "./ast.ts";
-
+import { evalExpression, luaOp } from "./eval.ts";
 import {
   jsToLuaValue,
-  luaCall,
   LuaEnv,
   LuaFunction,
-  luaGet,
-  luaKeys,
   LuaRuntimeError,
   LuaStackFrame,
   LuaTable,
-  luaTruthy,
   type LuaValue,
+  luaCall,
+  luaGet,
+  luaKeys,
+  luaTruthy,
   singleResult,
 } from "./runtime.ts";
 import { isSqlNull, SLIQ_NULL } from "./sliq_null.ts";
-import { evalExpression, luaOp } from "./eval.ts";
 import { asyncMergeSort } from "./util.ts";
-import type { DataStore } from "../data/datastore.ts";
-import type { KvPrimitives } from "../data/kv_primitives.ts";
-
-import type { QueryCollationConfig } from "../../plug-api/types/config.ts";
-
-import type { KvKey } from "../../plug-api/types/datastore.ts";
-
-import { executeAggregate, getAggregateSpec } from "./aggregates.ts";
-import { Config } from "../config.ts";
 
 // Implicit single group map key (aggregates without `group by`)
 const IMPLICIT_GROUP_KEY: unique symbol = Symbol("implicit-group");
@@ -193,7 +189,7 @@ export interface LuaQueryCollection {
  * Implements a query collection for a regular JavaScript array
  */
 export class ArrayQueryCollection<T> implements LuaQueryCollection {
-  constructor(private readonly array: T[]) { }
+  constructor(private readonly array: T[]) {}
   query(
     query: LuaCollectionQuery,
     env: LuaEnv,
@@ -842,7 +838,7 @@ export async function applyQuery(
 
   const mkEnv = grouped
     ? (ov: string | undefined, item: any, e: LuaEnv, s: LuaStackFrame) =>
-      buildGroupItemEnv(ov, groupByNames, item, e, s)
+        buildGroupItemEnv(ov, groupByNames, item, e, s)
     : buildItemEnvLocal;
 
   let selectResults: any[] | undefined;
@@ -1002,7 +998,7 @@ export async function queryLua<T = any>(
   for await (let { key, value } of kv.query({ prefix })) {
     if (enricher) {
       value = enricher(key, value);
-      // Enrichers may return undefined to filter a row out 
+      // Enrichers may return undefined to filter a row out
       if (value === undefined) continue;
     }
     results.push(value);
@@ -1056,7 +1052,7 @@ export class DataStoreQueryCollection implements LuaQueryCollection {
   constructor(
     private readonly dataStore: DataStore,
     readonly prefix: string[],
-  ) { }
+  ) {}
   query(
     query: LuaCollectionQuery,
     env: LuaEnv,

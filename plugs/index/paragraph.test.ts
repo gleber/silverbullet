@@ -1,14 +1,11 @@
+import type { PageMeta } from "@silverbulletmd/silverbullet/type/index";
 import { expect, test } from "vitest";
 import { parseMarkdown } from "../../client/markdown_parser/parser.ts";
 import { createMockSystem } from "../../plug-api/system_mock.ts";
-import type { PageMeta } from "@silverbulletmd/silverbullet/type/index";
 import { extractFrontMatter } from "./frontmatter.ts";
 import { indexParagraphs } from "./paragraph.ts";
 
-async function indexParagraphsForTest(
-  text: string,
-  pageName = "TestPage",
-) {
+async function indexParagraphsForTest(text: string, pageName = "TestPage") {
   const { config } = createMockSystem();
   config.set("index.paragraph.all", false);
   const tree = parseMarkdown(text);

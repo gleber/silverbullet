@@ -1,6 +1,6 @@
-import type { SysCallMapping } from "../system.ts";
 import type { Client } from "../../client.ts";
 import { fsEndpoint } from "../../spaces/constants.ts";
+import type { SysCallMapping } from "../system.ts";
 
 export function shellSyscalls(client: Client): SysCallMapping {
   return {

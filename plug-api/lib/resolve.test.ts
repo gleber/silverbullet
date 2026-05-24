@@ -1,5 +1,5 @@
-import { expect, test } from "vitest";
 import { resolveMarkdownLink } from "@silverbulletmd/silverbullet/lib/resolve";
+import { expect, test } from "vitest";
 
 test("Test URL resolver", () => {
   // Absolute paths

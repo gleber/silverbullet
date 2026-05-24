@@ -1,10 +1,10 @@
-import type { Manifest } from "../types.ts";
-import type { ControllerMessage, WorkerMessage } from "../protocol.ts";
-import type { Plug } from "../plug.ts";
-import { AssetBundle, type AssetJson } from "../../asset_bundle/bundle.ts";
-import type { Sandbox, SandboxFactory } from "./sandbox.ts";
 import { race, timeout } from "@silverbulletmd/silverbullet/lib/async";
+import { AssetBundle, type AssetJson } from "../../asset_bundle/bundle.ts";
 import { fsEndpoint } from "../../spaces/constants.ts";
+import type { Plug } from "../plug.ts";
+import type { ControllerMessage, WorkerMessage } from "../protocol.ts";
+import type { Manifest } from "../types.ts";
+import type { Sandbox, SandboxFactory } from "./sandbox.ts";
 
 /**
  * Represents a "safe" execution environment for plug code

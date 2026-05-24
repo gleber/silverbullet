@@ -1,11 +1,11 @@
-import type { SysCallMapping } from "../system.ts";
-import { parse } from "../../markdown_parser/parse_tree.ts";
 import type { ParseTree } from "@silverbulletmd/silverbullet/lib/tree";
 import {
   allLanguageNames,
   languageFor,
   loadLanguageFor,
 } from "../../languages.ts";
+import { parse } from "../../markdown_parser/parse_tree.ts";
+import type { SysCallMapping } from "../system.ts";
 
 export function languageSyscalls(): SysCallMapping {
   return {
@@ -14,7 +14,7 @@ export function languageSyscalls(): SysCallMapping {
       language: string,
       code: string,
     ): Promise<ParseTree> => {
-      const lang = languageFor(language) ?? await loadLanguageFor(language);
+      const lang = languageFor(language) ?? (await loadLanguageFor(language));
       if (!lang) {
         throw new Error(`Unknown language ${language}`);
       }

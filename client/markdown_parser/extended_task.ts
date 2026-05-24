@@ -1,11 +1,10 @@
+import { tags as t } from "@lezer/highlight";
 import type {
   BlockContext,
   LeafBlock,
   LeafBlockParser,
   MarkdownConfig,
 } from "@lezer/markdown";
-
-import { tags as t } from "@lezer/highlight";
 import { TaskStateTag } from "./customtags.ts";
 
 // Taken from https://github.com/lezer-parser/markdown/blob/main/src/extension.ts and adapted

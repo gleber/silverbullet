@@ -1,5 +1,5 @@
-import { editor, markdown } from "@silverbulletmd/silverbullet/syscalls";
 import type { ParseTree } from "@silverbulletmd/silverbullet/lib/tree";
+import { editor, markdown } from "@silverbulletmd/silverbullet/syscalls";
 import {
   indent as indentOp,
   moveDown as moveDownOp,

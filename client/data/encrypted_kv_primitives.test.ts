@@ -1,7 +1,7 @@
+import { deriveCTRKeyFromPassword } from "@silverbulletmd/silverbullet/lib/crypto";
 import { expect, test } from "vitest";
 import { EncryptedKvPrimitives } from "./encrypted_kv_primitives.ts";
 import { MemoryKvPrimitives } from "./memory_kv_primitives.ts";
-import { deriveCTRKeyFromPassword } from "@silverbulletmd/silverbullet/lib/crypto";
 
 test("Test Encrypted KV Primitives", async () => {
   const memoryKv = new MemoryKvPrimitives();

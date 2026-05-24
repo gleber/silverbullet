@@ -1,6 +1,6 @@
 import {
-  luaFormatNumber,
   LuaTable,
+  luaFormatNumber,
   luaToString,
 } from "../space_lua/runtime.ts";
 import { isSqlNull } from "../space_lua/sliq_null.ts";

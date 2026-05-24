@@ -7,22 +7,22 @@
  * but `interface`/`type` imports are.
  */
 
+import YAML from "js-yaml";
+import type { Config } from "../config.ts";
+import type { LuaExpression, LuaOrderBy } from "./ast.ts";
+import { coerceToNumber, isTaggedFloat } from "./numeric.ts";
+import { buildItemEnv } from "./query_env.ts";
 import type { ILuaFunction, LuaStackFrame } from "./runtime.ts";
 import {
-  luaCall,
   type LuaEnv,
   LuaTable,
+  type LuaValue,
+  luaCall,
   luaTruthy,
   luaValueToJS,
-  type LuaValue,
 } from "./runtime.ts";
 import { isSqlNull } from "./sliq_null.ts";
-import type { LuaExpression, LuaOrderBy } from "./ast.ts";
-import { buildItemEnv } from "./query_env.ts";
 import { asyncMergeSort } from "./util.ts";
-import type { Config } from "../config.ts";
-import { coerceToNumber, isTaggedFloat } from "./numeric.ts";
-import YAML from "js-yaml";
 
 export interface AggregateSpec {
   name: string;

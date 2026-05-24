@@ -1,7 +1,7 @@
+import type { CompleteEvent } from "@silverbulletmd/silverbullet/type/client";
+import type { PageMeta } from "@silverbulletmd/silverbullet/type/index";
 import { describe, expect, test } from "vitest";
 import { createMockSystem } from "../../plug-api/system_mock.ts";
-import type { PageMeta } from "@silverbulletmd/silverbullet/type/index";
-import type { CompleteEvent } from "@silverbulletmd/silverbullet/type/client";
 import { footnoteComplete, pageComplete } from "./complete.ts";
 
 function makeCompleteEvent(
@@ -16,10 +16,7 @@ function makeCompleteEvent(
   };
 }
 
-async function indexPageMeta(
-  name: string,
-  tags: string[] = [],
-): Promise<void> {
+async function indexPageMeta(name: string, tags: string[] = []): Promise<void> {
   const obj: PageMeta = {
     ref: name,
     tag: "page",

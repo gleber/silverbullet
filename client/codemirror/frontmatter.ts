@@ -1,12 +1,6 @@
-import type { EditorState } from "@codemirror/state";
 import { foldedRanges, syntaxTree } from "@codemirror/language";
+import type { EditorState } from "@codemirror/state";
 import { Decoration } from "@codemirror/view";
-import {
-  decoratorStateField,
-  HtmlWidget,
-  isCursorInRange,
-  LinkWidget,
-} from "./util.ts";
 import type { Client } from "../client.ts";
 import {
   frontmatterMailtoRegex,
@@ -14,6 +8,12 @@ import {
   frontmatterUrlRegex,
   frontmatterWikiLinkRegex,
 } from "../markdown_parser/constants.ts";
+import {
+  decoratorStateField,
+  HtmlWidget,
+  isCursorInRange,
+  LinkWidget,
+} from "./util.ts";
 import { processWikiLink, type WikiLinkMatch } from "./wiki_link_processor.ts";
 
 export function frontmatterPlugin(client: Client) {

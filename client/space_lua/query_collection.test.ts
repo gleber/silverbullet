@@ -1,9 +1,9 @@
 import { expect, test } from "vitest";
+import type { QueryCollationConfig } from "../../plug-api/types/config.ts";
+import { Config } from "../config.ts";
 import { parseExpressionString } from "./parse.ts";
 import { ArrayQueryCollection } from "./query_collection.ts";
 import { LuaEnv, LuaNativeJSFunction, LuaStackFrame } from "./runtime.ts";
-import { Config } from "../config.ts";
-import type { QueryCollationConfig } from "../../plug-api/types/config.ts";
 
 function configWithCollation(collation: QueryCollationConfig): Config {
   const config = new Config();

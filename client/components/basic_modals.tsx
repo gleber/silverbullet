@@ -1,6 +1,6 @@
+import type { ComponentChildren, Ref } from "preact";
 import { useEffect, useRef, useState } from "preact/hooks";
 import { MiniEditor } from "./mini_editor.tsx";
-import type { ComponentChildren, Ref } from "preact";
 
 export function Prompt({
   message,

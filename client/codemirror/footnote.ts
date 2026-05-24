@@ -1,10 +1,14 @@
 import { syntaxTree } from "@codemirror/language";
-import { Decoration, type EditorView, WidgetType } from "@codemirror/view";
-import { hoverTooltip } from "@codemirror/view";
 import type { EditorState, Extension } from "@codemirror/state";
-import { decoratorStateField, isCursorInRange } from "./util.ts";
+import {
+  Decoration,
+  type EditorView,
+  hoverTooltip,
+  WidgetType,
+} from "@codemirror/view";
 import { parseMarkdown } from "../markdown_parser/parser.ts";
 import { renderMarkdownToHtml } from "../markdown_renderer/markdown_render.ts";
+import { decoratorStateField, isCursorInRange } from "./util.ts";
 
 function outdentFootnoteBody(text: string): string {
   return text.replace(/^(?: {4}|\t)/gm, "");

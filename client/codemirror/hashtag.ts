@@ -1,10 +1,10 @@
 import { syntaxTree } from "@codemirror/language";
 import { Decoration } from "@codemirror/view";
-import { decoratorStateField } from "./util.ts";
-import * as Constants from "../../plugs/index/constants.ts";
-import { extractHashtag } from "../../plug-api/lib/tags.ts";
 import { encodePageURI } from "@silverbulletmd/silverbullet/lib/ref";
+import { extractHashtag } from "../../plug-api/lib/tags.ts";
+import * as Constants from "../../plugs/index/constants.ts";
 import type { Client } from "../client.ts";
+import { decoratorStateField } from "./util.ts";
 
 export function hashtagPlugin(client: Client) {
   return decoratorStateField((state) => {

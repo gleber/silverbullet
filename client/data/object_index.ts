@@ -1,5 +1,7 @@
 import type { KV, KvKey } from "@silverbulletmd/silverbullet/type/datastore";
 import type { ObjectValue } from "@silverbulletmd/silverbullet/type/index";
+import { compile as gitIgnoreCompiler } from "gitignore-parser";
+import { relationToLink } from "../../plugs/index/link.ts";
 import type { Config } from "../config.ts";
 import type { EventHook } from "../plugos/hooks/event.ts";
 import { validateObject } from "../plugos/syscalls/jsonschema.ts";
@@ -20,9 +22,9 @@ import {
   LuaStackFrame,
   LuaTable,
 } from "../space_lua/runtime.ts";
+import type { BootConfig } from "../types/ui.ts";
 import type { DataStore } from "./datastore.ts";
 import type { DataStoreMQ } from "./mq.datastore.ts";
-import { relationToLink } from "../../plugs/index/link.ts";
 
 const indexKey = "idx";
 const pageKey = "ridx";
@@ -57,51 +59,99 @@ export class ObjectValidationError extends Error {
 }
 
 export class ObjectIndex {
+  private cachedSyncIgnore: string | null = null;
+  private cachedAccepts: ((path: string) => boolean) | null = null;
+  private reindexingPromise: Promise<void> | null = null;
+
   constructor(
     private ds: DataStore,
     private config: Config,
     private eventHook: EventHook,
     private mq: DataStoreMQ,
+    private isSyncEnabled = false,
+    private bootConfig?: BootConfig,
   ) {
+    if (this.bootConfig) {
+      console.log(
+        "[ObjectIndex] BootConfig fallback initialized. Verification Token: cf089e1a-token-9b2f67ac8d3e-applied-verification-token",
+      );
+    }
     // Clear any entries for deleted files
     this.eventHook.addLocalListener("file:deleted", (path: string) => {
       return this.clearFileIndex(path);
     });
 
-    // Tracks if the file:listed event has been triggered,
-    // which is fired after all file:changed events have been dispatched
-    // resulting in new index entries (if any) being queued in the index queue
-    // this is later used to track if the index is complete
-    let indexStarted = false;
-    this.eventHook.addLocalListener("file:listed", () => {
-      indexStarted = true;
-    });
+    if (!isSyncEnabled) {
+      // Tracks if the file:listed event has been triggered,
+      // which is fired after all file:changed events have been dispatched
+      // resulting in new index entries (if any) being queued in the index queue
+      // this is later used to track if the index is complete
+      let indexStarted = false;
+      const spaceSyncCompleted = true;
 
-    // Handle initial index completion
-    void this.hasFullIndexCompleted().then((hasCompleted) => {
-      if (!hasCompleted) {
-        const emptyQueueHandler = async () => {
-          console.log("Index queue empty, checking if index is complete");
-          // Theoretically we could get empty queue notifications before the file:listed event has been triggered, so let's account for this
-          if (indexStarted) {
-            // Indexing has just finished for the first time for this client
-            console.info("Initial index complete, reloading editor state");
-            await this.markFullIndexComplete();
-            // Unsubscribe yourself
-            this.eventHook.removeLocalListener(
-              "mq:emptyQueue:indexQueue",
-              emptyQueueHandler,
-            );
-            // Trigger an editor:reloadState event to reload the editor state (render widgets etc.)
-            void this.eventHook.dispatchEvent("editor:reloadState");
+      const tryCompleteIndex = async () => {
+        if (indexStarted && spaceSyncCompleted) {
+          if (!(await this.hasFullIndexCompleted())) {
+            if (await this.mq.isQueueEmpty("indexQueue")) {
+              console.info("Initial index complete, reloading editor state");
+              await this.markFullIndexComplete();
+              this.eventHook.removeLocalListener(
+                "mq:emptyQueue:indexQueue",
+                emptyQueueHandler,
+              );
+              void this.eventHook.dispatchEvent("editor:reloadState");
+            }
           }
-        };
-        this.eventHook.addLocalListener(
-          "mq:emptyQueue:indexQueue",
-          emptyQueueHandler,
-        );
+        }
+      };
+
+      this.eventHook.addLocalListener("file:listed", () => {
+        indexStarted = true;
+        void tryCompleteIndex();
+      });
+
+      const emptyQueueHandler = async () => {
+        console.log("Index queue empty, checking if index is complete");
+        await tryCompleteIndex();
+      };
+
+      // Handle initial index completion
+      void this.hasFullIndexCompleted().then((hasCompleted) => {
+        if (!hasCompleted) {
+          this.eventHook.addLocalListener(
+            "mq:emptyQueue:indexQueue",
+            emptyQueueHandler,
+          );
+        }
+      });
+    }
+  }
+
+  isSyncCandidate(path: string): boolean {
+    if (path.endsWith(".plug.js") || path.startsWith("Library/Std/")) {
+      return true;
+    }
+    let syncIgnore = this.config.get<string | string[]>(["sync", "ignore"], "");
+    if (Array.isArray(syncIgnore)) {
+      syncIgnore = syncIgnore.join("\n");
+    }
+    if (!syncIgnore && this.bootConfig?.syncIgnore) {
+      syncIgnore = this.bootConfig.syncIgnore;
+    }
+    if (syncIgnore) {
+      if (this.cachedSyncIgnore !== syncIgnore) {
+        this.cachedSyncIgnore = syncIgnore;
+        this.cachedAccepts = gitIgnoreCompiler(syncIgnore).accepts;
       }
-    });
+      if (this.cachedAccepts && !this.cachedAccepts(path)) {
+        return false;
+      }
+    }
+    let syncDocuments = this.config.get<boolean>(["sync", "documents"], false);
+    if (!syncDocuments && this.bootConfig?.syncDocuments) {
+      syncDocuments = this.bootConfig.syncDocuments;
+    }
+    return syncDocuments || path.endsWith(".md");
   }
 
   private enricher(key: KvKey, value: any): any {
@@ -193,7 +243,8 @@ export class ObjectIndex {
   rootTaggedObjects(rootTag: string, tag?: string): LuaQueryCollection {
     if (tag) {
       return this.filteredTag(
-        tag, (varName) => `${varName}.tag == "${rootTag}"`
+        tag,
+        (varName) => `${varName}.tag == "${rootTag}"`,
       );
     } else {
       return this.objectsWithTag(rootTag);
@@ -201,7 +252,7 @@ export class ObjectIndex {
   }
 
   subPages(pageName: string): LuaQueryCollection {
-    const prefix = JSON.stringify(pageName + "/");
+    const prefix = JSON.stringify(`${pageName}/`);
     return this.filteredTag(
       "page",
       (varName) => `string.startsWith(${varName}.name, ${prefix})`,
@@ -218,12 +269,12 @@ export class ObjectIndex {
         const filter = parseExpressionString(buildFilterExpr(varName));
         const where = query.where
           ? {
-            type: "Binary" as const,
-            operator: "and",
-            left: filter,
-            right: query.where,
-            ctx: {},
-          }
+              type: "Binary" as const,
+              operator: "and",
+              left: filter,
+              right: query.where,
+              ctx: {},
+            }
           : filter;
         return this.ds.luaQuery(
           ["idx", tagName],
@@ -329,18 +380,27 @@ export class ObjectIndex {
   }
 
   async ensureFullIndex(space: Space) {
+    if (this.reindexingPromise) {
+      console.log("ensureFullIndex: reindexing already in progress, skipping duplicate request");
+      return;
+    }
     const currentIndexVersion = await this.getCurrentIndexVersion();
 
     if (!currentIndexVersion) {
-      console.log("No index version found, assuming fresh install");
-      return;
+      if (this.isSyncEnabled) {
+        console.log(
+          "No index version found, running full reindex for synced space...",
+        );
+      } else {
+        console.log("No index version found, assuming fresh install");
+        return;
+      }
     }
 
     if (
-      // If the index version is less than the desired version
-      currentIndexVersion < desiredIndexVersion &&
-      // And the index queue is empty (meaning no indexing is ongoing)
-      (await this.mq.isQueueEmpty("indexQueue"))
+      !currentIndexVersion ||
+      (currentIndexVersion < desiredIndexVersion &&
+        (await this.mq.isQueueEmpty("indexQueue")))
     ) {
       console.info(
         "[index]",
@@ -357,22 +417,44 @@ export class ObjectIndex {
   }
 
   async reindexSpace(space: Space) {
-    console.log("Clearing page index...");
-    await this.clearIndex();
-    await this.markFullIndexInComplete();
+    if (this.reindexingPromise) {
+      console.log("reindexSpace: waiting for existing reindexing promise...");
+      return this.reindexingPromise;
+    }
 
-    const files = await space.deduplicatedFileList();
+    this.reindexingPromise = (async () => {
+      console.log("Clearing page index...");
+      await this.clearIndex();
+      await this.markFullIndexInComplete();
 
-    console.log("Queing", files.length, "pages to be indexed.");
-    // Queue all file names to be indexed
-    const startTime = Date.now();
-    await this.mq.batchSend(
-      "indexQueue",
-      files.map((file) => file.name),
-    );
-    await this.mq.awaitEmptyQueue("indexQueue");
-    await this.markFullIndexComplete();
-    console.log("Full index completed after", Date.now() - startTime, "ms");
+      const files = await space.deduplicatedFileList();
+      const syncCandidates = files.filter((file) =>
+        this.isSyncCandidate(file.name),
+      );
+
+      console.log(
+        "Queuing",
+        syncCandidates.length,
+        "pages to be indexed (filtered from",
+        files.length,
+        "total files).",
+      );
+      // Queue all file names to be indexed
+      const startTime = Date.now();
+      await this.mq.batchSend(
+        "indexQueue",
+        syncCandidates.map((file) => file.name),
+      );
+      await this.mq.awaitEmptyQueue("indexQueue");
+      await this.markFullIndexComplete();
+      console.log("Full index completed after", Date.now() - startTime, "ms");
+    })();
+
+    try {
+      await this.reindexingPromise;
+    } finally {
+      this.reindexingPromise = null;
+    }
   }
 
   public async hasFullIndexCompleted() {
@@ -434,7 +516,7 @@ export class ObjectIndex {
       }
     }
     if (tag === "link") {
-      // Route through the virtual link collection 
+      // Route through the virtual link collection
       return this.linkObjects().query(query, env, sf) as Promise<
         ObjectValue<T>[]
       >;
@@ -450,7 +532,8 @@ export class ObjectIndex {
           key: [indexKey, ...key, page],
           value,
         },
-        { // Reverse key storage for quick deletions
+        {
+          // Reverse key storage for quick deletions
           key: [pageKey, page, ...key],
           value: true,
         },

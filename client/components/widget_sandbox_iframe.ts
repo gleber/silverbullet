@@ -1,6 +1,6 @@
+import type { CodeWidgetContent } from "@silverbulletmd/silverbullet/type/client";
 import type { Client } from "../client.ts";
 import { panelHtml } from "./panel_html.ts";
-import type { CodeWidgetContent } from "@silverbulletmd/silverbullet/type/client";
 
 /**
  * Implements sandbox widgets using iframe with a pooling mechanism to speed up loading

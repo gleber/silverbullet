@@ -1,11 +1,11 @@
-import { syscall } from "../syscall.ts";
+import type { Ref } from "@silverbulletmd/silverbullet/lib/ref";
 
 import type {
   DocumentMeta,
   FileMeta,
   PageMeta,
 } from "../../plug-api/types/index.ts";
-import type { Ref } from "@silverbulletmd/silverbullet/lib/ref";
+import { syscall } from "../syscall.ts";
 
 /**
  * Exposes the space with its pages, documents and plugs.

@@ -50,6 +50,7 @@ import { ObjectIndex } from "./data/object_index.ts";
 import { MainUI } from "./editor_ui.tsx";
 import { PathPageNavigator, parseRefFromURI } from "./navigator.ts";
 import { EventHook } from "./plugos/hooks/event.ts";
+import { handleObjectsRequest } from "./runtime_api/objects_api.ts";
 import { Space } from "./space.ts";
 import { evalStatement } from "./space_lua/eval.ts";
 import { parseExpressionString, parse as parseLua } from "./space_lua/parse.ts";
@@ -73,7 +74,6 @@ import type {
   ServiceWorkerTargetMessage,
 } from "./types/ui.ts";
 import { WidgetCache } from "./widget_cache.ts";
-import { handleObjectsRequest } from "./runtime_api/objects_api.ts";
 
 // Fetch the file list ever so often, this will implicitly kick off a snapshot comparison resulting in the indexing of changed pages
 const fetchFileListInterval = 10000;
@@ -142,6 +142,15 @@ export class Client {
   private onLoadRef: Ref;
   dbPrefix?: string;
   syncMode = false;
+
+  get isSyncingSpace(): boolean {
+    return (
+      !!navigator.serviceWorker &&
+      !this.bootConfig.disableServiceWorker &&
+      localStorage.getItem("enableSW") !== "0"
+    );
+  }
+
   // Widget and image height caching
   widgetCache!: WidgetCache;
   objectIndex!: ObjectIndex;
@@ -203,6 +212,8 @@ export class Client {
       this.config,
       this.eventHook,
       this.mq,
+      this.isSyncingSpace,
+      this.bootConfig,
     );
 
     // Seed the full-index readiness flag from persistent state so a
@@ -372,17 +383,49 @@ export class Client {
       void this.eventedSpacePrimitives.fetchFileList();
     }, fetchFileListInterval + jitter());
 
-    this.eventHook.addLocalListener("files:changed", async (names: string[]) => {
-      console.log("Queueing index for", names.length, "files");
-      this.indexingQueuingCount += names.length;
-      this.maxIndexQueueSize += names.length;
-      try {
-        await this.objectIndex.batchClearFileIndexes(names);
-        await this.mq.batchSend("indexQueue", names);
-      } finally {
-        this.indexingQueuingCount -= names.length;
-      }
-    });
+    this.eventHook.addLocalListener(
+      "files:changed",
+      async (names: string[]) => {
+        if (this.isSyncingSpace && !this.fullSyncCompleted) {
+          // Ignore initial file listing changes before the first full sync finishes.
+          // These files will be indexed as they are downloaded and fire fileSyncComplete.
+          return;
+        }
+        const candidates = names.filter((name) =>
+          this.objectIndex.isSyncCandidate(name),
+        );
+        if (candidates.length === 0) return;
+        console.log("Queueing index for", candidates.length, "files");
+        this.indexingQueuingCount += candidates.length;
+        this.maxIndexQueueSize += candidates.length;
+        try {
+          await this.objectIndex.batchClearFileIndexes(candidates);
+          await this.mq.batchSend("indexQueue", candidates);
+        } finally {
+          this.indexingQueuingCount -= candidates.length;
+        }
+      },
+    );
+
+    this.eventHook.addLocalListener(
+      "service-worker:file-sync-complete",
+      async (message: { path: string; operations: number }) => {
+        if (
+          message.operations > 0 &&
+          this.objectIndex.isSyncCandidate(message.path)
+        ) {
+          console.log("Queueing index for synced file", message.path);
+          this.indexingQueuingCount += 1;
+          this.maxIndexQueueSize += 1;
+          try {
+            await this.objectIndex.batchClearFileIndexes([message.path]);
+            await this.mq.batchSend("indexQueue", [message.path]);
+          } finally {
+            this.indexingQueuingCount -= 1;
+          }
+        }
+      },
+    );
 
     const space = new Space(
       this.eventedSpacePrimitives,
@@ -761,7 +804,8 @@ export class Client {
     let cursorWasVisible = false;
     try {
       const block = editorView.lineBlockAt(previousSelection.main.head);
-      const scrollBottom = previousScrollTop + editorView.scrollDOM.clientHeight;
+      const scrollBottom =
+        previousScrollTop + editorView.scrollDOM.clientHeight;
       cursorWasVisible =
         block.bottom > previousScrollTop && block.top < scrollBottom;
     } catch {
@@ -946,22 +990,27 @@ export class Client {
     if (this.indexProgressInterval) return;
 
     const check = () => {
-      const size = this.mq.getQueueSizeInMemory("indexQueue") + this.indexingQueuingCount;
+      const size =
+        this.mq.getQueueSizeInMemory("indexQueue") + this.indexingQueuingCount;
       if (size > 0) {
         if (size > this.maxIndexQueueSize) {
           this.maxIndexQueueSize = size;
         }
         const percentage = Math.round(
-          ((this.maxIndexQueueSize - size) / this.maxIndexQueueSize) * 100
+          ((this.maxIndexQueueSize - size) / this.maxIndexQueueSize) * 100,
         );
         const safePercentage = Math.max(0, Math.min(99, percentage));
-        console.log(`[startIndexProgressTracker] Index progress: ${safePercentage}%, size: ${size}, max: ${this.maxIndexQueueSize}`);
+        console.log(
+          `[startIndexProgressTracker] Index progress: ${safePercentage}%, size: ${size}, max: ${this.maxIndexQueueSize}`,
+        );
         this.ui.showProgress(safePercentage, "index");
       } else {
         if (this.maxIndexQueueSize > 0) {
-          console.log(`[startIndexProgressTracker] Index complete, clearing progress.`);
+          console.log(
+            `[startIndexProgressTracker] Index complete, clearing progress.`,
+          );
           this.maxIndexQueueSize = 0;
-          this.ui.showProgress(undefined);
+          this.ui.showProgress(undefined, "index");
         }
       }
     };
@@ -1066,6 +1115,21 @@ export class Client {
           // Re-evaluate CONFIG and space scripts now that sync has pulled them
           void this.clientSystem.reloadState();
         }
+        this.ui.showProgress(undefined, "sync");
+        break;
+      }
+      case "sync-status": {
+        const status = message.status;
+        const percentage =
+          status.totalFiles > 0
+            ? Math.round((status.filesProcessed / status.totalFiles) * 100)
+            : 0;
+        this.ui.showProgress(percentage, "sync");
+        break;
+      }
+      case "sync-error": {
+        console.error("Sync error:", message.message, message.path);
+        this.ui.showProgress(undefined, "sync");
         break;
       }
       case "online-status": {

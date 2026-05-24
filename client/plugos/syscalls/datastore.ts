@@ -1,19 +1,18 @@
+import type { KV, KvKey } from "@silverbulletmd/silverbullet/type/datastore";
+import type { ClientSystem } from "../../client_system.ts";
+import type { DataStore } from "../../data/datastore.ts";
+import type { KvQueryOptions } from "../../data/kv_primitives.ts";
 import {
   type LuaCollectionQuery,
   queryLua,
 } from "../../space_lua/query_collection.ts";
-import type { DataStore } from "../../data/datastore.ts";
-import type { SysCallMapping } from "../system.ts";
 import {
   jsToLuaValue,
   LuaEnv,
   LuaStackFrame,
   luaValueToJS,
 } from "../../space_lua/runtime.ts";
-import type { KvQueryOptions } from "../../data/kv_primitives.ts";
-import type { ClientSystem } from "../../client_system.ts";
-
-import type { KV, KvKey } from "@silverbulletmd/silverbullet/type/datastore";
+import type { SysCallMapping } from "../system.ts";
 
 /**
  * Exposes the datastore API to plugs, but scoping everything to a prefix based on the plug's name

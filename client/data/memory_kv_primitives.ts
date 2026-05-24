@@ -1,8 +1,7 @@
 import { readFile, writeFile } from "node:fs/promises";
-import type { KvPrimitives, KvQueryOptions } from "./kv_primitives.ts";
 import { throttle } from "@silverbulletmd/silverbullet/lib/async";
-
 import type { KV, KvKey } from "@silverbulletmd/silverbullet/type/datastore";
+import type { KvPrimitives, KvQueryOptions } from "./kv_primitives.ts";
 
 const memoryKeySeparator = "\0";
 

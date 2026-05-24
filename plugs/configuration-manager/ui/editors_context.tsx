@@ -1,8 +1,8 @@
 import { createContext } from "preact";
 import { useContext } from "preact/hooks";
 import type { ConfigEditor } from "./use_config_editor.ts";
-import type { ShortcutEditor } from "./use_shortcut_editor.ts";
 import type { LibrariesEditor } from "./use_libraries_editor.ts";
+import type { ShortcutEditor } from "./use_shortcut_editor.ts";
 
 export type EditorsValue = {
   config: ConfigEditor;

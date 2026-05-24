@@ -1,4 +1,4 @@
-import type { Command } from "./command.ts";
+import type { Path } from "@silverbulletmd/silverbullet/lib/ref";
 import type {
   FilterOption,
   Notification,
@@ -9,8 +9,8 @@ import type {
   DocumentMeta,
   PageMeta,
 } from "@silverbulletmd/silverbullet/type/index";
-import type { Path } from "@silverbulletmd/silverbullet/lib/ref";
 import type { SyncStatus } from "../spaces/sync.ts";
+import type { Command } from "./command.ts";
 
 export type PanelConfig = {
   mode?: PanelMode;
@@ -179,6 +179,7 @@ export type BootConfig = {
   // Sync configuration
   syncDocuments?: boolean;
   syncIgnore?: string;
+  syncConcurrency?: number;
   // These are all configured via ?query parameters, e.g. ?disableSpaceLua=1
   disableSpaceLua?: boolean;
   disableSpaceStyle?: boolean;

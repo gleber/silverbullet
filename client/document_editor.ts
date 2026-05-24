@@ -1,9 +1,9 @@
-import type { Client } from "./client.ts";
 import { timeout } from "@silverbulletmd/silverbullet/lib/async";
-import type { DocumentMeta } from "@silverbulletmd/silverbullet/type/index";
 import type { Ref } from "@silverbulletmd/silverbullet/lib/ref";
-import documentEditorJS from "./document_editor_js.ts";
 import type { DocumentEditorContent } from "@silverbulletmd/silverbullet/type/client";
+import type { DocumentMeta } from "@silverbulletmd/silverbullet/type/index";
+import type { Client } from "./client.ts";
+import documentEditorJS from "./document_editor_js.ts";
 
 export class DocumentEditor {
   iframe!: HTMLIFrameElement;

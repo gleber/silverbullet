@@ -1,3 +1,5 @@
+import { markdown } from "@codemirror/lang-markdown";
+import { foldNodeProp, StreamLanguage } from "@codemirror/language";
 import { yaml as yamlLanguage } from "@codemirror/legacy-modes/mode/yaml";
 import { styleTags, tags as t } from "@lezer/highlight";
 import {
@@ -7,21 +9,24 @@ import {
   Subscript,
   Superscript,
 } from "@lezer/markdown";
-import { markdown } from "@codemirror/lang-markdown";
-import { foldNodeProp, StreamLanguage } from "@codemirror/language";
-import * as ct from "./customtags.ts";
-import { TaskList } from "./extended_task.ts";
-import { Table } from "./table_parser.ts";
-import { FootnoteDefinition, FootnoteRef, InlineFootnote } from "./footnote.ts";
-import { anchorRegex, nakedUrlRegex, pWikiLinkRegex, tagRegex } from "./constants.ts";
-import { HTMLBlockParsing } from "./html_block.ts";
-import { parse } from "./parse_tree.ts";
 import type { ParseTree } from "@silverbulletmd/silverbullet/lib/tree";
 import { luaLanguage } from "../space_lua/parse.ts";
+import {
+  anchorRegex,
+  nakedUrlRegex,
+  pWikiLinkRegex,
+  tagRegex,
+} from "./constants.ts";
 import {
   buildCustomSyntaxExtensions,
   type CustomSyntaxSpecs,
 } from "./custom_syntax.ts";
+import * as ct from "./customtags.ts";
+import { TaskList } from "./extended_task.ts";
+import { FootnoteDefinition, FootnoteRef, InlineFootnote } from "./footnote.ts";
+import { HTMLBlockParsing } from "./html_block.ts";
+import { parse } from "./parse_tree.ts";
+import { Table } from "./table_parser.ts";
 
 const WikiLink: MarkdownConfig = {
   defineNodes: [

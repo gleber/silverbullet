@@ -1,11 +1,11 @@
-import { compile as gitIgnoreCompiler } from "gitignore-parser";
 import { jitter, sleep } from "@silverbulletmd/silverbullet/lib/async";
+import { compile as gitIgnoreCompiler } from "gitignore-parser";
 import type { KvPrimitives } from "../data/kv_primitives.ts";
 import { EventEmitter } from "../plugos/event.ts";
 import { stdLibPrefix } from "../spaces/constants.ts";
+import type { HttpSpacePrimitives } from "../spaces/http_space_primitives.ts";
 import type { SpacePrimitives } from "../spaces/space_primitives.ts";
 import { SpaceSync, SyncSnapshot, type SyncStatus } from "../spaces/sync.ts";
-import type { HttpSpacePrimitives } from "../spaces/http_space_primitives.ts";
 
 const syncSnapshotKey = ["$sync", "snapshot"];
 const syncInterval = 20;
@@ -32,6 +32,7 @@ type SyncEngineEvents = {
 export type SyncConfig = {
   syncDocuments?: boolean;
   syncIgnore?: string;
+  syncConcurrency?: number;
 };
 
 /**
@@ -62,6 +63,7 @@ export class SyncEngine extends EventEmitter<SyncEngineEvents> {
     this.spaceSync = new SpaceSync(this.local, this.remote, {
       conflictResolver: this.stdLibAwareConflictResolver.bind(this),
       isSyncCandidate: this.isSyncCandidate.bind(this),
+      syncConcurrency: this.syncConfig.syncConcurrency,
     });
 
     this.spaceSync.on({
@@ -70,6 +72,9 @@ export class SyncEngine extends EventEmitter<SyncEngineEvents> {
         await this.saveSnapshot(snapshot);
       },
       snapshotUpdated: this.saveSnapshot.bind(this),
+      fileSyncComplete: (path, operations) => {
+        void this.emit("fileSyncComplete", path, operations);
+      },
     });
 
     // Start the sync loop
@@ -100,12 +105,15 @@ export class SyncEngine extends EventEmitter<SyncEngineEvents> {
     this.syncAccepts = config.syncIgnore
       ? gitIgnoreCompiler(config.syncIgnore).accepts
       : () => true;
+    if (this.spaceSync) {
+      this.spaceSync.options.syncConcurrency = config.syncConcurrency;
+    }
     console.log("[sync] Updated sync config:", this.syncConfig);
   }
 
   isSyncCandidate(path: string): boolean {
-    // ALWAYS sync plugs
-    if (path.endsWith(".plug.js")) {
+    // ALWAYS sync plugs and standard library
+    if (path.endsWith(".plug.js") || path.startsWith("Library/Std/")) {
       return true;
     }
     // Follow SB_SYNC_IGNORE rules
@@ -136,7 +144,9 @@ export class SyncEngine extends EventEmitter<SyncEngineEvents> {
         path,
         this.snapshot,
       );
-      void this.emit("fileSyncComplete", path, operations);
+      if (operations <= 0) {
+        void this.emit("fileSyncComplete", path, operations);
+      }
       return operations;
     } catch (e) {
       void this.emit("syncError", e, path);

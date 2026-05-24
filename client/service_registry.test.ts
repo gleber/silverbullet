@@ -1,9 +1,9 @@
-import { expect, test } from "vitest";
 import type { EventHookT } from "@silverbulletmd/silverbullet/type/manifest";
+import { expect, test } from "vitest";
+import { Config } from "./config.ts";
 import { EventHook } from "./plugos/hooks/event.ts";
 import { System } from "./plugos/system.ts";
 import { ServiceRegistry } from "./service_registry.ts";
-import { Config } from "./config.ts";
 
 test("Test services", async () => {
   const system = new System<EventHookT>();

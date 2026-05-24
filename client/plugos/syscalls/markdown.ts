@@ -1,15 +1,15 @@
-import type { SysCallMapping } from "../system.ts";
-import { parse } from "../../markdown_parser/parse_tree.ts";
 import {
   type ParseTree,
   renderToText,
 } from "@silverbulletmd/silverbullet/lib/tree";
+import * as TagConstants from "../../../plugs/index/constants.ts";
+import type { Client } from "../../client.ts";
+import { parse } from "../../markdown_parser/parse_tree.ts";
 import { buildExtendedMarkdownLanguage } from "../../markdown_parser/parser.ts";
 import {
   expandMarkdown,
   type MarkdownExpandOptions,
 } from "../../markdown_renderer/inline.ts";
-import type { Client } from "../../client.ts";
 import {
   type MarkdownRenderOptions,
   renderMarkdownToHtml,
@@ -18,7 +18,7 @@ import {
   jsonToMDTable,
   refCellTransformer,
 } from "../../markdown_renderer/result_render.ts";
-import * as TagConstants from "../../../plugs/index/constants.ts";
+import type { SysCallMapping } from "../system.ts";
 
 export function markdownSyscalls(client: Client): SysCallMapping {
   return {
@@ -62,10 +62,12 @@ export function markdownSyscalls(client: Client): SysCallMapping {
       }
       if (!options.resolveTagHref) {
         options.resolveTagHref = (tagName: string) => {
-          return client.config.get<string | null>(
-            ["tags", tagName, "tagPage"],
-            null,
-          ) ?? TagConstants.tagPrefix + tagName;
+          return (
+            client.config.get<string | null>(
+              ["tags", tagName, "tagPage"],
+              null,
+            ) ?? TagConstants.tagPrefix + tagName
+          );
         };
       }
       return renderMarkdownToHtml(mdTree, options);

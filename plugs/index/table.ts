@@ -1,18 +1,16 @@
-import {
-  renderToText,
-  replaceNodesMatching,
-} from "@silverbulletmd/silverbullet/lib/tree";
+import { extractHashtag } from "@silverbulletmd/silverbullet/lib/tags";
 import {
   collectNodesMatching,
   collectNodesOfType,
   normalizeTableRow,
   type ParseTree,
+  renderToText,
+  replaceNodesMatching,
 } from "@silverbulletmd/silverbullet/lib/tree";
 import type {
   ObjectValue,
   PageMeta,
 } from "@silverbulletmd/silverbullet/type/index";
-import { extractHashtag } from "@silverbulletmd/silverbullet/lib/tags";
 import type { FrontMatter } from "./frontmatter.ts";
 
 type TableRowObject = ObjectValue<{

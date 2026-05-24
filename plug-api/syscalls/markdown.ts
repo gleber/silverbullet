@@ -1,5 +1,5 @@
-import { syscall } from "../syscall.ts";
 import type { ParseTree } from "../lib/tree.ts";
+import { syscall } from "../syscall.ts";
 
 /**
  * Parses a piece of markdown text into a ParseTree.

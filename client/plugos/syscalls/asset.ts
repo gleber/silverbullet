@@ -1,5 +1,5 @@
-import type { SysCallMapping, System } from "../system.ts";
 import type { FileMeta } from "../../../plug-api/types/index.ts";
+import type { SysCallMapping, System } from "../system.ts";
 
 export default function assetSyscalls(system: System<any>): SysCallMapping {
   return {

@@ -1,11 +1,9 @@
-import type { Client } from "../../client.ts";
 import {
-  foldAll,
-  foldCode,
-  toggleFold,
-  unfoldAll,
-  unfoldCode,
-} from "@codemirror/language";
+  acceptCompletion,
+  closeCompletion,
+  moveCompletionSelection,
+  startCompletion,
+} from "@codemirror/autocomplete";
 import {
   cursorCharLeft,
   cursorCharRight,
@@ -54,34 +52,36 @@ import {
   transposeChars,
   undo,
 } from "@codemirror/commands";
+import { insertNewlineContinueMarkup } from "@codemirror/lang-markdown";
 import {
-  acceptCompletion,
-  closeCompletion,
-  moveCompletionSelection,
-  startCompletion,
-} from "@codemirror/autocomplete";
+  foldAll,
+  foldCode,
+  toggleFold,
+  unfoldAll,
+  unfoldCode,
+} from "@codemirror/language";
+import { forceLinting } from "@codemirror/lint";
+import { openSearchPanel } from "@codemirror/search";
 import type { Transaction } from "@codemirror/state";
 import { EditorView } from "@codemirror/view";
-import { getVimModule } from "../../vim_loader.ts";
-import type { SysCallMapping } from "../system.ts";
+import {
+  isValidPath,
+  type Path,
+  parseToRef,
+  type Ref,
+} from "@silverbulletmd/silverbullet/lib/ref";
 import type {
   FilterOption,
   NotificationAction,
   NotificationType,
   UploadFile,
 } from "@silverbulletmd/silverbullet/type/client";
-import { openSearchPanel } from "@codemirror/search";
-import { forceLinting } from "@codemirror/lint";
-import { refreshLintEffect } from "../../codemirror/lint.ts";
-import {
-  isValidPath,
-  parseToRef,
-  type Path,
-  type Ref,
-} from "@silverbulletmd/silverbullet/lib/ref";
-import { insertNewlineContinueMarkup } from "@codemirror/lang-markdown";
 import type { VimConfig } from "@silverbulletmd/silverbullet/type/config";
 import type { PageMeta } from "@silverbulletmd/silverbullet/type/index";
+import type { Client } from "../../client.ts";
+import { refreshLintEffect } from "../../codemirror/lint.ts";
+import { getVimModule } from "../../vim_loader.ts";
+import type { SysCallMapping } from "../system.ts";
 
 export function editorSyscalls(client: Client): SysCallMapping {
   const syscalls: SysCallMapping = {

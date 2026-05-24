@@ -1,7 +1,7 @@
-import type { Hook, Manifest } from "../types.ts";
+import type { DocumentEditorCallback } from "@silverbulletmd/silverbullet/type/client";
 import type { DocumentEditorT } from "@silverbulletmd/silverbullet/type/manifest";
 import type { System } from "../system.ts";
-import type { DocumentEditorCallback } from "@silverbulletmd/silverbullet/type/client";
+import type { Hook, Manifest } from "../types.ts";
 
 export class DocumentEditorHook implements Hook<DocumentEditorT> {
   documentEditors = new Map<

@@ -1,3 +1,4 @@
+import { isTaggedFloat, untagNumber } from "../numeric.ts";
 import {
   jsToLuaValue,
   LuaBuiltinFunction,
@@ -6,7 +7,6 @@ import {
   LuaTable,
   luaToString,
 } from "../runtime.ts";
-import { isTaggedFloat, untagNumber } from "../numeric.ts";
 import { luaFormat } from "./format.ts";
 import {
   type CaptureResult,
